@@ -1,5 +1,5 @@
 import React from 'react';
-import { Timer, Zap, User, Settings, HelpCircle, ChevronRight, Home, Trophy, BarChart2, User as UserIcon } from 'lucide-react';
+import { Timer, Zap, User, ChevronRight, Home, Trophy, BarChart2, User as UserIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './EntryPage.css';
 
@@ -13,10 +13,6 @@ const EntryPage = () => {
                 <div className="logo-section">
                     <Timer className="logo-icon" size={24} />
                     <span className="logo-text">PRESSURE</span>
-                </div>
-                <div className="header-actions">
-                    <Settings size={20} className="header-icon" />
-                    <HelpCircle size={20} className="header-icon" />
                 </div>
             </header>
 

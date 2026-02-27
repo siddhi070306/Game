@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
+  /* Default Dark Theme */
   --bg-deep: #0a0e17;
   --bg-surface: #121826;
   --bg-glass: rgba(255, 255, 255, 0.03);
@@ -11,8 +12,25 @@
   --text-main: #ffffff;
   --text-muted: #94a3b8;
   --glass-border: rgba(255, 255, 255, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.02);
+  --glow-top: #1e293b;
+  --glow-acc: #2d1b10;
 
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+[data-theme='light'] {
+  --bg-deep: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-glass: rgba(0, 0, 0, 0.04);
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  /* Darker muted text for contrast */
+  --glass-border: rgba(0, 0, 0, 0.12);
+  --card-bg: rgba(0, 0, 0, 0.04);
+  --glow-top: #e2e8f0;
+  --glow-acc: #ffedd5;
+  --nav-bg: rgba(255, 255, 255, 0.9);
 }
 
 * {
@@ -23,20 +41,23 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-deep);
+  background-color: #05070a;
+  /* Always keep the outer environment dark */
   color: var(--text-main);
   overflow-x: hidden;
   font-size: 16px;
+  display: flex;
+  justify-content: center;
 }
 
 #root {
   width: 100%;
   max-width: 480px;
-  /* Mobile focused max width */
-  margin: 0 auto;
   min-height: 100vh;
   position: relative;
   background-color: var(--bg-deep);
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.4s ease;
 }
 
 .App {
@@ -57,12 +78,14 @@ body {
 .gradient-text {
   background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .btn-primary {
   background: var(--primary);
-  color: white;
+  color: #ffffff;
+  /* Always white on primary buttons */
   border: none;
   border-radius: 14px;
   padding: 16px 32px;

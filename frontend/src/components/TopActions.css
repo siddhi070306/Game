@@ -1,0 +1,30 @@
+.top-actions-container {
+    position: absolute;
+    top: 60px;
+    /* Aligned with page headers */
+    right: 20px;
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+}
+
+.icon-btn-ghost {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.icon-btn-ghost:hover {
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.icon-btn-ghost:active {
+    transform: scale(0.9);
+}

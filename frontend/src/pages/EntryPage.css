@@ -3,7 +3,7 @@
     flex-direction: column;
     height: 100vh;
     padding: 20px;
-    background: radial-gradient(circle at center top, #1e293b 0%, #0a0e17 70%);
+    background: radial-gradient(circle at center top, var(--glow-top) 0%, var(--bg-deep) 70%);
 }
 
 .entry-header {
@@ -37,6 +37,11 @@
 .header-icon {
     color: var(--text-muted);
     cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.header-icon:hover {
+    color: var(--primary);
 }
 
 .entry-content {
@@ -198,7 +203,9 @@
     justify-content: space-around;
     align-items: center;
     padding-bottom: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-surface);
+    border-top: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
     border-radius: 24px 24px 0 0;
 }
 

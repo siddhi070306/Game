@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, HelpCircle, ChevronRight } from 'lucide-react';
+import { X, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './ChallengePage.css';
 
@@ -17,9 +17,7 @@ const ChallengePage = () => {
                     <span className="phase-subtitle">PHASE 2: SPEED ROUND</span>
                     <h3 className="question-count">Question 01/10</h3>
                 </div>
-                <button className="icon-btn">
-                    <HelpCircle size={22} />
-                </button>
+                <div style={{ width: 40 }} /> {/* Spacer to keep title centered */}
             </header>
 
             {/* Main Content */}

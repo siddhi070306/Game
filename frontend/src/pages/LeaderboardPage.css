@@ -106,6 +106,20 @@
     margin: 0 15px;
 }
 
+.icon-btn {
+    background: var(--bg-glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+}
+
 .avatar-placeholder {
     width: 40px;
     height: 40px;

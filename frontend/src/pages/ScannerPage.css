@@ -33,15 +33,15 @@
 }
 
 .icon-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
+    background: var(--bg-glass);
+    border: 1px solid var(--glass-border);
     border-radius: 50%;
     width: 40px;
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--text-main);
     cursor: pointer;
     backdrop-filter: blur(10px);
 }
