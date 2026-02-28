@@ -190,34 +190,3 @@
     height: 25px;
     background: #1e293b;
 }
-
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    height: 80px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding-bottom: 20px;
-    background: var(--bg-surface);
-    border-top: 1px solid var(--glass-border);
-    backdrop-filter: blur(20px);
-    border-radius: 24px 24px 0 0;
-}
-
-.nav-item {
-    background: none;
-    border: none;
-    color: #475569;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.nav-item.active {
-    color: var(--primary);
-    transform: scale(1.1);
-}

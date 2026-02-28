@@ -5,6 +5,13 @@ import './EntryPage.css';
 
 const EntryPage = () => {
     const navigate = useNavigate();
+    const [username, setUsername] = React.useState('');
+
+    const handleStart = () => {
+        if (!username.trim()) return alert("IDENTIFY YOURSELF, HUNTER!");
+        localStorage.setItem('player', JSON.stringify({ username: username.trim() }));
+        navigate('/scan');
+    };
 
     return (
         <div className="entry-container animate-fade">
@@ -43,13 +50,15 @@ const EntryPage = () => {
                             type="text"
                             placeholder="e.g. ShadowHunter"
                             className="player-input"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                         />
                     </div>
                 </div>
 
                 <button
                     className="btn-primary start-btn"
-                    onClick={() => navigate('/scan')}
+                    onClick={handleStart}
                 >
                     START GAME <ChevronRight size={20} />
                 </button>
@@ -70,17 +79,21 @@ const EntryPage = () => {
 
             {/* Bottom Nav */}
             <nav className="bottom-nav glass">
-                <button className="nav-item active">
+                <button className="nav-item active" onClick={() => navigate('/')}>
                     <Home size={22} />
+                    <span>Home</span>
                 </button>
-                <button className="nav-item">
+                <button className="nav-item" onClick={() => navigate('/leaderboard')}>
                     <Trophy size={22} />
+                    <span>Trophy</span>
                 </button>
                 <button className="nav-item">
                     <BarChart2 size={22} />
+                    <span>Stats</span>
                 </button>
                 <button className="nav-item">
                     <UserIcon size={22} />
+                    <span>Profile</span>
                 </button>
             </nav>
         </div>

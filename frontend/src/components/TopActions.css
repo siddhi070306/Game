@@ -1,11 +1,45 @@
 .top-actions-container {
-    position: absolute;
-    top: 60px;
-    /* Aligned with page headers */
-    right: 20px;
+    position: fixed;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    padding: 0 20px;
     display: flex;
-    gap: 12px;
-    z-index: 100;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.desktop-nav {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-link {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.action-icons {
+    display: flex;
+    gap: 8px;
 }
 
 .icon-btn-ghost {
@@ -13,7 +47,7 @@
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 4px;
+    padding: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,9 +56,4 @@
 
 .icon-btn-ghost:hover {
     color: var(--primary);
-    transform: scale(1.1);
-}
-
-.icon-btn-ghost:active {
-    transform: scale(0.9);
 }

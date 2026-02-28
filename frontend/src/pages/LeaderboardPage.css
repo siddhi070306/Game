@@ -179,8 +179,3 @@
 .current .points-label {
     color: rgba(255, 255, 255, 0.5);
 }
-
-.nav-item span {
-    font-size: 0.65rem;
-    font-weight: 600;
-}

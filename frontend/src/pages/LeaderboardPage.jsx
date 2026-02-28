@@ -1,20 +1,55 @@
 import React from 'react';
 import { ChevronLeft, RotateCcw, Home, Trophy, BarChart2, User, Gamepad2, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { io } from 'socket.io-client';
+import API_BASE_URL from '../utils/api';
 import './LeaderboardPage.css';
 
 const LeaderboardPage = () => {
     const navigate = useNavigate();
+    const [players, setPlayers] = React.useState([]);
+    const [myUsername, setMyUsername] = React.useState('');
 
-    const players = [
-        { rank: 1, name: "Alex Storm", title: "GRANDMASTER", points: "12,450", isTop: true },
-        { rank: 2, name: "Neon Knight", title: "PRO RANK", points: "11,820" },
-        { rank: 3, name: "Sarah Blade", title: "PRO RANK", points: "11,105" },
-        { rank: 42, name: "You (Current)", title: "CHALLENGER", points: "8,240", isCurrent: true },
-        { rank: 4, name: "Pixel Master", title: "ELITE", points: "10,900" },
-        { rank: 5, name: "Cyber Queen", title: "ELITE", points: "10,420" },
-        { rank: 6, name: "Void Runner", title: "ELITE", points: "8,850" },
-    ];
+    const fetchLeaderboard = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/leaderboard`);
+            if (response.ok) {
+                const data = await response.json();
+
+                // Map API data to UI structure
+                const formatted = data.map((p, index) => ({
+                    rank: index + 1,
+                    name: p.username,
+                    title: p.score > 50 ? "GRANDMASTER" : p.score > 20 ? "PRO RANK" : "ELITE",
+                    points: p.score.toString(),
+                    isTop: index === 0,
+                    isCurrent: p.username === myUsername
+                }));
+                // If there were many more, we might filter or show a specific slice
+                setPlayers(formatted);
+            }
+        } catch (err) {
+            console.error("Leaderboard fetch error:", err);
+        }
+    };
+
+    React.useEffect(() => {
+        const playerStr = localStorage.getItem('player');
+        if (playerStr) {
+            const player = JSON.parse(playerStr);
+            setMyUsername(player.username);
+        }
+
+        fetchLeaderboard();
+
+        const socket = io(API_BASE_URL);
+        socket.on('leaderboard_update', () => {
+            console.log("Leaderboard update event received");
+            fetchLeaderboard();
+        });
+
+        return () => socket.disconnect();
+    }, [myUsername]);
 
     return (
         <div className="leaderboard-page animate-fade">
@@ -24,8 +59,8 @@ const LeaderboardPage = () => {
                     <ChevronLeft size={24} />
                 </button>
                 <h2 className="header-title">Live Standings</h2>
-                <button className="icon-btn">
-                    <RotateCcw size={20} color="#3b82f6" />
+                <button className="icon-btn" onClick={fetchLeaderboard}>
+                    <RotateCcw size={20} color="#3b82f6" className="refresh-icon" />
                 </button>
             </header>
 
@@ -74,21 +109,21 @@ const LeaderboardPage = () => {
 
             {/* Bottom Nav */}
             <nav className="bottom-nav glass">
-                <button className="nav-item">
-                    <Gamepad2 size={24} />
-                    <span>Play</span>
+                <button className="nav-item" onClick={() => navigate('/')}>
+                    <Home size={22} />
+                    <span>Home</span>
+                </button>
+                <button className="nav-item" onClick={() => navigate('/scan')}>
+                    <Gamepad2 size={22} />
+                    <span>Hunt</span>
                 </button>
                 <button className="nav-item active">
-                    <BarChart2 size={24} />
+                    <BarChart2 size={22} />
                     <span>Leaderboard</span>
                 </button>
                 <button className="nav-item">
-                    <User size={24} />
+                    <User size={22} />
                     <span>Profile</span>
-                </button>
-                <button className="nav-item">
-                    <ShoppingBag size={24} />
-                    <span>Store</span>
                 </button>
             </nav>
         </div>
