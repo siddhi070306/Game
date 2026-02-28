@@ -79,7 +79,7 @@ const ChallengePage = () => {
             {/* Main Content */}
             <main className="challenge-body">
                 {/* Circular Timer */}
-                <div className="timer-container">
+                <div className={`timer-container ${timeLeft < 15 ? 'pulse-primary' : ''}`}>
                     <div className="timer-ring">
                         <svg viewBox="0 0 100 100">
                             <circle className="bg" cx="50" cy="50" r="45" />

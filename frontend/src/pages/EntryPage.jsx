@@ -7,6 +7,13 @@ const EntryPage = () => {
     const navigate = useNavigate();
     const [username, setUsername] = React.useState('');
 
+    React.useEffect(() => {
+        const existingPlayer = localStorage.getItem('player');
+        if (existingPlayer) {
+            navigate('/scan');
+        }
+    }, [navigate]);
+
     const handleStart = () => {
         if (!username.trim()) return alert("IDENTIFY YOURSELF, HUNTER!");
         localStorage.setItem('player', JSON.stringify({ username: username.trim() }));

@@ -80,10 +80,11 @@ const LeaderboardPage = () => {
             {/* List */}
             <main className="leaderboard-content">
                 <div className="player-list">
-                    {players.map((player) => (
+                    {players.map((player, index) => (
                         <div
                             key={player.rank}
-                            className={`player-card ${player.isCurrent ? 'current' : ''} ${player.isTop ? 'first' : ''}`}
+                            className={`player-card animate-slide-up stagger-${(index % 5) + 1} ${player.isCurrent ? 'current' : ''} ${player.isTop ? 'first' : ''}`}
+                            style={{ opacity: 0 }}
                         >
                             <div className="rank-section">
                                 <span className={`rank-num ${player.isTop ? 'gold' : ''}`}>{player.rank}</span>

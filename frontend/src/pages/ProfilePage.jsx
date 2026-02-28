@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronLeft, User, Trophy, Clock, CheckCircle, Home, BarChart2 } from 'lucide-react';
+import { ChevronLeft, User, Trophy, Clock, CheckCircle, Home, BarChart2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../utils/api';
 import './ProfilePage.css';
@@ -30,6 +30,13 @@ const ProfilePage = () => {
 
         fetchProfile();
     }, [navigate]);
+
+    const handleLogout = () => {
+        if (window.confirm("ARE YOU SURE YOU WANT TO SIGN OUT, OPERATOR?")) {
+            localStorage.removeItem('player');
+            navigate('/');
+        }
+    };
 
     if (loading) return (
         <div className="profile-page loading">
@@ -65,7 +72,7 @@ const ProfilePage = () => {
                 </div>
 
                 <div className="stats-grid">
-                    <div className="profile-stat-card">
+                    <div className="profile-stat-card glint-container">
                         <Trophy className="stat-icon blue" size={24} />
                         <div className="stat-info">
                             <span className="stat-label">TOTAL SCORE</span>
@@ -73,7 +80,7 @@ const ProfilePage = () => {
                         </div>
                     </div>
 
-                    <div className="profile-stat-card">
+                    <div className="profile-stat-card glint-container">
                         <Clock className="stat-icon orange" size={24} />
                         <div className="stat-info">
                             <span className="stat-label">TOTAL TIME</span>
@@ -87,7 +94,11 @@ const ProfilePage = () => {
                     <div className="achievements-list">
                         {userData.answeredQuestions.length > 0 ? (
                             userData.answeredQuestions.map((qId, index) => (
-                                <div key={index} className="achievement-item">
+                                <div
+                                    key={index}
+                                    className={`achievement-item animate-slide-up stagger-${(index % 5) + 1}`}
+                                    style={{ opacity: 0 }}
+                                >
                                     <CheckCircle size={18} className="check-icon" />
                                     <span>Station ID: {qId}</span>
                                 </div>
@@ -97,6 +108,11 @@ const ProfilePage = () => {
                         )}
                     </div>
                 </div>
+
+                <button className="logout-btn" onClick={handleLogout}>
+                    <LogOut size={18} />
+                    <span>SIGN OUT</span>
+                </button>
             </main>
 
             {/* Bottom Nav */}
