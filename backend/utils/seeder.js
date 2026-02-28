@@ -6,23 +6,23 @@ export const seedQuestions = async () => {
         if (count === 0) {
             const scavengerQuestions = [
                 {
-                    qrId: "QR001",
+                    qrId: "101",
                     questionText: "Which logic gate returns 1 only if all inputs are 1?",
                     correctAnswer: "AND"
                 },
                 {
-                    qrId: "QR002",
-                    questionText: "What is the decimal equivalent of the binary number 1010?",
-                    correctAnswer: "10"
+                    qrId: "412",
+                    questionText: "In the programming world, what does HTML stand for?",
+                    correctAnswer: "Hypertext Markup Language"
                 },
                 {
-                    qrId: "QR003",
-                    questionText: "Who is known as the father of modern computing?",
-                    correctAnswer: "Alan Turing"
+                    qrId: "789",
+                    questionText: "What is the capital of France?",
+                    correctAnswer: "Paris"
                 },
                 {
-                    qrId: "QR004",
-                    questionText: "In networking, what does HTTP stand for?",
+                    qrId: "104",
+                    questionText: "Wait! In networking, what does HTTP stand for?",
                     correctAnswer: "Hypertext Transfer Protocol"
                 }
             ];

@@ -16,15 +16,17 @@ const LeaderboardPage = () => {
             if (response.ok) {
                 const data = await response.json();
 
-                // Map API data to UI structure
-                const formatted = data.map((p, index) => ({
-                    rank: index + 1,
-                    name: p.username,
-                    title: p.score > 50 ? "GRANDMASTER" : p.score > 20 ? "PRO RANK" : "ELITE",
-                    points: p.score.toString(),
-                    isTop: index === 0,
-                    isCurrent: p.username === myUsername
-                }));
+                const formatted = data.map((p, index) => {
+                    const score = p.score || 0;
+                    return {
+                        rank: index + 1,
+                        name: p.username || 'Anonymous',
+                        title: score > 50 ? "GRANDMASTER" : score > 20 ? "PRO RANK" : "ELITE",
+                        points: score.toString(),
+                        isTop: index === 0,
+                        isCurrent: p.username === myUsername
+                    };
+                });
                 // If there were many more, we might filter or show a specific slice
                 setPlayers(formatted);
             }
@@ -89,12 +91,12 @@ const LeaderboardPage = () => {
 
                             <div className="avatar-section">
                                 <div className="avatar-placeholder">
-                                    {player.name.charAt(0)}
+                                    {player.name ? player.name.charAt(0) : '?'}
                                 </div>
                             </div>
 
                             <div className="info-section">
-                                <h4 className="player-name">{player.name}</h4>
+                                <h4 className="player-name">{player.name || 'Anonymous'}</h4>
                                 <span className="player-title">{player.title}</span>
                             </div>
 
@@ -121,7 +123,7 @@ const LeaderboardPage = () => {
                     <BarChart2 size={22} />
                     <span>Leaderboard</span>
                 </button>
-                <button className="nav-item">
+                <button className="nav-item" onClick={() => navigate('/profile')}>
                     <User size={22} />
                     <span>Profile</span>
                 </button>

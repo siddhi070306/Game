@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, Delete, Home, Trophy, History, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../utils/api';
 import './ScannerPage.css';
 
 const ScannerPage = () => {
@@ -149,7 +150,7 @@ const ScannerPage = () => {
                     <History size={22} />
                     <span>Rankings</span>
                 </button>
-                <button className="nav-item">
+                <button className="nav-item" onClick={() => navigate('/profile')}>
                     <User size={22} />
                     <span>Profile</span>
                 </button>

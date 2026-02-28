@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleScan, handleSubmit, getLeaderboard } from '../controllers/gameController.js';
+import { handleScan, handleSubmit, getLeaderboard, getProfile } from '../controllers/gameController.js';
 
 const router = express.Router();
 
@@ -11,5 +11,6 @@ router.post('/submit', (req, res) => {
 });
 
 router.get('/leaderboard', getLeaderboard);
+router.get('/user/:username', getProfile);
 
 export default router;

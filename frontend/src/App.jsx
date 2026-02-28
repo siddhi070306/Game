@@ -6,6 +6,7 @@ import EntryPage from './pages/EntryPage';
 import ScannerPage from './pages/ScannerPage';
 import ChallengePage from './pages/ChallengePage';
 import LeaderboardPage from './pages/LeaderboardPage';
+import ProfilePage from './pages/ProfilePage';
 import './App.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="/scan" element={<ScannerPage />} />
             <Route path="/challenge" element={<ChallengePage />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Routes>
         </div>
       </Router>

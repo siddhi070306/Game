@@ -50,15 +50,15 @@ const ChallengePage = () => {
             });
 
             if (response.ok) {
-                navigate('/leaderboard');
+                navigate('/scan');
             } else {
                 const data = await response.json();
                 alert(data.message || "Submission failed");
-                navigate('/leaderboard');
+                navigate('/scan');
             }
         } catch (error) {
             console.error("Submit error:", error);
-            navigate('/leaderboard');
+            navigate('/scan');
         }
     };
 

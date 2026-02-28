@@ -23,5 +23,3 @@ npm install
 npm run dev
 ```
 
----
-Initialized by **Antigravity AI**

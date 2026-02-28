@@ -91,7 +91,7 @@ const EntryPage = () => {
                     <BarChart2 size={22} />
                     <span>Stats</span>
                 </button>
-                <button className="nav-item">
+                <button className="nav-item" onClick={() => navigate('/profile')}>
                     <UserIcon size={22} />
                     <span>Profile</span>
                 </button>
