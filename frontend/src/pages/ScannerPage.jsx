@@ -34,7 +34,7 @@ const ScannerPage = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    username: player.username,
+                    userId: player.userId,
                     qrId: inputCode
                 })
             });

@@ -152,20 +152,100 @@
     gap: 10px;
 }
 
+.achievement-wrapper {
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
 .achievement-item {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.02);
-    padding: 14px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.02);
-    font-size: 0.9rem;
-    font-weight: 600;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 18px 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.achievement-wrapper.active .achievement-item {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.station-main-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.status-badge {
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+}
+
+.station-details {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: none;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-label {
+    font-size: 0.65rem;
+    color: #64748b;
+    font-weight: 800;
+}
+
+.detail-value {
+    font-size: 0.85rem;
+    color: white;
+    font-weight: 700;
+}
+
+.detail-value.highlight {
+    color: #10b981;
 }
 
 .check-icon {
     color: #10b981;
+}
+
+.wrong-icon {
+    color: #ef4444;
+}
+
+@keyframes expand {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-expand {
+    animation: expand 0.3s ease-out;
 }
 
 .no-data {

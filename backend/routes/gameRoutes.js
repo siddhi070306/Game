@@ -1,10 +1,11 @@
 import express from 'express';
-import { handleScan, handleSubmit, getLeaderboard, getProfile } from '../controllers/gameController.js';
+import { loginPlayer, handleScan, handleSubmit, getLeaderboard, getProfile } from '../controllers/gameController.js';
 
 import Question from '../models/Question.js';
 
 const router = express.Router();
 
+router.post('/login', loginPlayer);
 router.post('/scan', handleScan);
 
 router.post('/submit', (req, res) => {

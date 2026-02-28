@@ -1,17 +1,45 @@
 import User from '../models/User.js';
 import Question from '../models/Question.js';
 
-// @desc    Initiate a scan for a specific QR code
-// @route   POST /api/scan
-export const handleScan = async (req, res) => {
-    const { username, qrId } = req.body;
-    console.log(`Scan Request: User=${username}, Station=${qrId}`);
+// @desc    Login or register a user with PIN
+// @route   POST /api/login
+export const loginPlayer = async (req, res) => {
+    const { username, pin } = req.body;
+
+    if (!username || !pin) {
+        return res.status(400).json({ message: "Username and PIN are required" });
+    }
 
     try {
         let user = await User.findOne({ username });
+
+        // Scenario A: User does not exist, create new
         if (!user) {
-            console.log(`Creating new user: ${username}`);
-            user = await User.create({ username });
+            user = await User.create({ username, pin });
+            return res.status(200).json({ userId: user._id, username: user.username });
+        }
+
+        // Scenario B: User exists, verify PIN
+        if (user.pin !== pin) {
+            return res.status(401).json({ message: "Username taken or incorrect PIN" });
+        }
+
+        return res.status(200).json({ userId: user._id, username: user.username });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Initiate a scan for a specific QR code
+// @route   POST /api/scan
+export const handleScan = async (req, res) => {
+    const { userId, qrId } = req.body;
+    console.log(`Scan Request: UserID=${userId}, Station=${qrId}`);
+
+    try {
+        let user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
         }
 
         // 1. Security: Check if already answered
@@ -25,6 +53,8 @@ export const handleScan = async (req, res) => {
             return res.status(404).json({ message: "Invalid QR code" });
         }
 
+
+
         // 2. Logic: Set start time ONLY if it's a new scan
         if (user.activeQrId !== qrId || !user.currentQuestionStartTime) {
             user.currentQuestionStartTime = Date.now();
@@ -32,7 +62,7 @@ export const handleScan = async (req, res) => {
             await user.save();
         }
 
-        console.log(`Scan successful for ${username} at station ${qrId}`);
+        console.log(`Scan successful for ${user.username} at station ${qrId}`);
         // 3. Return questionText and startTime for timer persistence
         res.status(200).json({
             questionText: question.questionText,
@@ -47,10 +77,10 @@ export const handleScan = async (req, res) => {
 // @desc    Submit an answer for the active challenge
 // @route   POST /api/submit
 export const handleSubmit = async (req, res, io) => {
-    const { username, qrId, answer } = req.body;
+    const { userId, qrId, answer } = req.body;
 
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findById(userId);
         if (!user) return res.status(404).json({ message: "User not found" });
 
         // 1. Security: Verify qrId matches the activeQrId
@@ -63,7 +93,18 @@ export const handleSubmit = async (req, res, io) => {
 
         // 3. Time Check: 60s + 5s network grace
         if (timeTaken > 65) {
-            user.totalActiveTime += 60; // Add 60s penalty as requested
+            user.totalActiveTime += 60;
+
+            // Record timeout in history
+            user.submissionHistory.push({
+                qrId,
+                userAnswer: "TIMEOUT",
+                correctAnswer: "N/A",
+                isCorrect: false,
+                timeTaken: 60
+            });
+
+            user.answeredQuestions.push(qrId);
             user.activeQrId = null;
             user.currentQuestionStartTime = null;
             await user.save();
@@ -74,6 +115,8 @@ export const handleSubmit = async (req, res, io) => {
         const question = await Question.findOne({ qrId });
         if (!question) return res.status(404).json({ message: "Question not found" });
 
+
+
         const normalizedUserAnswer = answer.trim().toLowerCase().replace(/\s\s+/g, ' ');
         const normalizedCorrectAnswer = question.correctAnswer.trim().toLowerCase().replace(/\s\s+/g, ' ');
         const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
@@ -81,16 +124,27 @@ export const handleSubmit = async (req, res, io) => {
         // 5. Scoring
         if (isCorrect) {
             user.score += 10;
+
+
         }
 
-        // 6. Finalize: Add time, clear state
+        // 6. Record submission history
+        user.submissionHistory.push({
+            qrId,
+            userAnswer: answer,
+            correctAnswer: question.correctAnswer,
+            isCorrect,
+            timeTaken
+        });
+
+        // 7. Finalize: Add time, clear state
         user.totalActiveTime += timeTaken;
         user.answeredQuestions.push(qrId);
         user.activeQrId = null;
         user.currentQuestionStartTime = null;
         await user.save();
 
-        // 7. Real-time update
+        // 8. Real-time update
         if (io) {
             io.emit('leaderboard_update');
         }

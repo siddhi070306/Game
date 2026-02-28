@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    pin: {
+        type: String,
+        required: true,
+    },
     score: {
         type: Number,
         default: 0,
@@ -18,6 +22,14 @@ const userSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
+    submissionHistory: [{
+        qrId: { type: String },
+        userAnswer: { type: String },
+        correctAnswer: { type: String },
+        isCorrect: { type: Boolean },
+        timeTaken: { type: Number },
+        submittedAt: { type: Date, default: Date.now }
+    }],
     currentQuestionStartTime: {
         type: Date,
     },

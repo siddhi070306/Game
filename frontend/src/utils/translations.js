@@ -35,7 +35,8 @@ export const translations = {
         sign_out: "SIGN OUT",
         logout_confirm: "ARE YOU SURE YOU WANT TO SIGN OUT, OPERATOR?",
         connection_error: "Connection error. Is the server running?",
-        timeout_err: "Timeout: 60 seconds exceeded"
+        timeout_err: "Timeout: 60 seconds exceeded",
+        stations_summary: "MISSIONS SUMMARY"
     },
     hi: {
         lobby: "लॉबी",
@@ -73,7 +74,8 @@ export const translations = {
         sign_out: "साइन आउट",
         logout_confirm: "क्या आप वाकई साइन आउट करना चाहते हैं, ऑपरेटर?",
         connection_error: "कनेक्शन त्रुटि। क्या सर्वर चल रहा है?",
-        timeout_err: "समय समाप्त: 60 सेकंड से ऊपर"
+        timeout_err: "समय समाप्त: 60 सेकंड से ऊपर",
+        stations_summary: "मिशन सारांश"
     },
     mr: {
         lobby: "लॉबी",
@@ -111,6 +113,7 @@ export const translations = {
         sign_out: "साइन आउट",
         logout_confirm: "तुम्हाला खात्री आहे की तुम्ही साइन आउट करू इच्छिता?",
         connection_error: "कनेक्शन एरर. सर्व्हर चालू आहे का?",
-        timeout_err: "वेळ संपली: ६० सेकंद पूर्ण"
+        timeout_err: "वेळ संपली: ६० सेकंद पूर्ण",
+        stations_summary: "मिशन सारांश"
     }
 };

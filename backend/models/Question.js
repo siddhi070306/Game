@@ -13,6 +13,14 @@ const questionSchema = new mongoose.Schema({
     correctAnswer: {
         type: String,
         required: true,
+    },
+    isCompleted: {
+        type: Boolean,
+        default: false
+    },
+    completedBy: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true

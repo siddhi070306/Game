@@ -49,6 +49,13 @@ const ProfilePage = () => {
         }
     };
 
+    const [expandedStation, setExpandedStation] = useState(null);
+
+    const toggleStation = (id) => {
+        if (expandedStation === id) setExpandedStation(null);
+        else setExpandedStation(id);
+    };
+
     if (loading) return (
         <div className="profile-page loading">
             <div className="loader"></div>
@@ -113,21 +120,48 @@ const ProfilePage = () => {
                 </div>
 
                 <div className="achievements-section">
-                    <h3 className="section-title">{t.stations_cleared}</h3>
+                    <h3 className="section-title">{t.stations_summary}</h3>
                     <div className="achievements-list">
-                        {userData.answeredQuestions.length > 0 ? (
-                            userData.answeredQuestions.map((qId, index) => (
+                        {(userData.submissionHistory && userData.submissionHistory.length > 0) ? (
+                            userData.submissionHistory.map((sub, index) => (
                                 <div
                                     key={index}
-                                    className={`achievement-item animate-slide-up stagger-${(index % 5) + 1}`}
-                                    style={{ opacity: 0 }}
+                                    className={`achievement-wrapper ${expandedStation === sub.qrId ? 'active' : ''}`}
+                                    onClick={() => toggleStation(sub.qrId)}
                                 >
-                                    <CheckCircle size={18} className="check-icon" />
-                                    <span>{t.station} ID: {qId}</span>
+                                    <div
+                                        className={`achievement-item animate-slide-up stagger-${(index % 5) + 1}`}
+                                        style={{ opacity: 1, borderLeft: sub.isCorrect ? '4px solid #10b981' : '4px solid #ef4444' }}
+                                    >
+                                        <div className="station-main-info">
+                                            <CheckCircle size={18} className={sub.isCorrect ? "check-icon" : "wrong-icon"} />
+                                            <span>STATION: {sub.qrId}</span>
+                                        </div>
+                                        <div className="status-badge" style={{ color: sub.isCorrect ? '#10b981' : '#ef4444' }}>
+                                            {sub.isCorrect ? 'PASSED' : 'FAILED'}
+                                        </div>
+                                    </div>
+
+                                    {expandedStation === sub.qrId && (
+                                        <div className="station-details animate-expand">
+                                            <div className="detail-row">
+                                                <span className="detail-label">YOUR ANSWER:</span>
+                                                <span className="detail-value">{sub.userAnswer || "N/A"}</span>
+                                            </div>
+                                            <div className="detail-row">
+                                                <span className="detail-label">CORRECT:</span>
+                                                <span className="detail-value highlight">{sub.correctAnswer}</span>
+                                            </div>
+                                            <div className="detail-row">
+                                                <span className="detail-label">TIME:</span>
+                                                <span className="detail-value">{Math.round(sub.timeTaken)}s</span>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             ))
                         ) : (
-                            <p className="no-data">No stations cleared yet. Get hunting!</p>
+                            <p className="no-data">No data recorded yet. Get hunting!</p>
                         )}
                     </div>
                 </div>
