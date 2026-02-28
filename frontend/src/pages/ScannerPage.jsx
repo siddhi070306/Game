@@ -13,11 +13,10 @@ const ScannerPage = () => {
     const [code, setCode] = useState("");
     const [error, setError] = useState(false);
 
-    // Session Check
+    // No session check redirect as App handles it
     useEffect(() => {
-        const player = localStorage.getItem('player');
-        if (!player) navigate('/');
-    }, [navigate]);
+        // Just for logging if needed
+    }, []);
 
     // Mock Database for Testing
     const mockDatabase = {
@@ -47,7 +46,8 @@ const ScannerPage = () => {
                 navigate('/challenge', {
                     state: {
                         question: data.questionText,
-                        qrId: inputCode
+                        qrId: inputCode,
+                        startTime: data.startTime
                     }
                 });
             } else {
@@ -148,7 +148,7 @@ const ScannerPage = () => {
                     <Home size={22} />
                     <span>{t.lobby}</span>
                 </button>
-                <button className="nav-item active">
+                <button className="nav-item active" onClick={() => navigate('/scan')}>
                     <Trophy size={22} />
                     <span>{t.hunt}</span>
                 </button>

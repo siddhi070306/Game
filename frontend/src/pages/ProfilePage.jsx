@@ -15,8 +15,7 @@ const ProfilePage = () => {
 
     useEffect(() => {
         const fetchProfile = async () => {
-            const playerStr = localStorage.getItem('player');
-            if (!playerStr) return navigate('/');
+            const playerStr = localStorage.getItem('player') || JSON.stringify({ username: "Anonymous" });
             const player = JSON.parse(playerStr);
 
             try {
@@ -42,6 +41,14 @@ const ProfilePage = () => {
         }
     };
 
+    const handleBack = () => {
+        if (window.history.length > 1) {
+            navigate(-1);
+        } else {
+            navigate('/');
+        }
+    };
+
     if (loading) return (
         <div className="profile-page loading">
             <div className="loader"></div>
@@ -49,17 +56,29 @@ const ProfilePage = () => {
         </div>
     );
 
-    if (!userData) return (
-        <div className="profile-page error">
-            <p>USER NOT FOUND</p>
-            <button className="btn-primary" onClick={() => navigate('/')}>RETURN TO LOBBY</button>
+    if (!userData && !loading) return (
+        <div className="profile-page animate-fade">
+            <header className="profile-header">
+                <button className="icon-btn-ghost" onClick={handleBack}>
+                    <ChevronLeft size={24} />
+                </button>
+                <h2 className="header-title">{t.operator_profile}</h2>
+                <div style={{ width: 40 }} />
+            </header>
+            <main className="profile-content">
+                <div className="profile-hero">
+                    <div className="profile-avatar"><User size={48} /></div>
+                    <h1 className="profile-name">NEW OPERATOR</h1>
+                    <span className="profile-rank">Scan a station to begin tracking</span>
+                </div>
+            </main>
         </div>
     );
 
     return (
         <div className="profile-page animate-fade">
             <header className="profile-header">
-                <button className="icon-btn-ghost" onClick={() => navigate(-1)}>
+                <button className="icon-btn-ghost" onClick={handleBack}>
                     <ChevronLeft size={24} />
                 </button>
                 <h2 className="header-title">{t.operator_profile}</h2>

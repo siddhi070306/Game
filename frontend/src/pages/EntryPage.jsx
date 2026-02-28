@@ -11,12 +11,14 @@ const EntryPage = () => {
     const t = translations[language];
     const [username, setUsername] = React.useState('');
 
+    // Removed the auto-redirect to allow users to change names if they want
     React.useEffect(() => {
-        const existingPlayer = localStorage.getItem('player');
-        if (existingPlayer) {
-            navigate('/scan');
+        const player = localStorage.getItem('player');
+        if (player) {
+            const parsed = JSON.parse(player);
+            if (parsed.username) setUsername(parsed.username);
         }
-    }, [navigate]);
+    }, []);
 
     const handleStart = () => {
         if (!username.trim()) return alert(t.identify_yourself);

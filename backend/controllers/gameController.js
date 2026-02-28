@@ -25,14 +25,19 @@ export const handleScan = async (req, res) => {
             return res.status(404).json({ message: "Invalid QR code" });
         }
 
-        // 2. Logic: Set start time and active QR ID
-        user.currentQuestionStartTime = Date.now();
-        user.activeQrId = qrId;
-        await user.save();
+        // 2. Logic: Set start time ONLY if it's a new scan
+        if (user.activeQrId !== qrId || !user.currentQuestionStartTime) {
+            user.currentQuestionStartTime = Date.now();
+            user.activeQrId = qrId;
+            await user.save();
+        }
 
         console.log(`Scan successful for ${username} at station ${qrId}`);
-        // 3. Return ONLY questionText
-        res.status(200).json({ questionText: question.questionText });
+        // 3. Return questionText and startTime for timer persistence
+        res.status(200).json({
+            questionText: question.questionText,
+            startTime: user.currentQuestionStartTime
+        });
     } catch (error) {
         console.error("HandleScan Full Error:", error);
         res.status(500).json({ message: error.message, stack: error.stack });
@@ -62,14 +67,16 @@ export const handleSubmit = async (req, res, io) => {
             user.activeQrId = null;
             user.currentQuestionStartTime = null;
             await user.save();
-            return res.status(408).json({ message: "Timeout: 60 seconds exceeded" });
+            return res.status(200).json({ message: "RESPONSE RECORDED" });
         }
 
         // 4. Validation
         const question = await Question.findOne({ qrId });
         if (!question) return res.status(404).json({ message: "Question not found" });
 
-        const isCorrect = answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase();
+        const normalizedUserAnswer = answer.trim().toLowerCase().replace(/\s\s+/g, ' ');
+        const normalizedCorrectAnswer = question.correctAnswer.trim().toLowerCase().replace(/\s\s+/g, ' ');
+        const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
 
         // 5. Scoring
         if (isCorrect) {
@@ -91,7 +98,7 @@ export const handleSubmit = async (req, res, io) => {
         res.status(200).json({
             correct: isCorrect,
             score: user.score,
-            message: isCorrect ? "STATION CLEARED!" : "WRONG ANSWER!"
+            message: "RESPONSE RECORDED"
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

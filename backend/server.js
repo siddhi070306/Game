@@ -47,6 +47,14 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-httpServer.listen(PORT, '0.0.0.0', () => {
+const server = httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+process.on('SIGINT', () => {
+    server.close(() => {
+        console.log('Server process terminated');
+        process.exit(0);
+    });
+});
+

@@ -11,17 +11,33 @@ const ChallengePage = () => {
     const { language } = useSettings();
     const t = translations[language];
     const location = useLocation();
-    const { question, qrId } = location.state || { question: "No question loaded.", qrId: "" };
+    const { question, qrId, startTime } = location.state || { question: "No question loaded.", qrId: "", startTime: null };
 
-    const [timeLeft, setTimeLeft] = React.useState(60);
+    const [timeLeft, setTimeLeft] = React.useState(null);
     const [answer, setAnswer] = React.useState('');
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     React.useEffect(() => {
-        if (!qrId) navigate('/scan');
+        if (!qrId) return navigate('/scan');
+
+        // Initial Calculation
+        if (startTime) {
+            const serverStart = new Date(startTime).getTime();
+            const elapsed = (Date.now() - serverStart) / 1000;
+            const remaining = Math.max(0, Math.floor(60 - elapsed));
+            setTimeLeft(remaining);
+
+            if (remaining <= 0) {
+                handleSubmit(true);
+            }
+        } else {
+            // Fallback for unexpected missing startTime
+            setTimeLeft(60);
+        }
 
         const timer = setInterval(() => {
             setTimeLeft((prev) => {
+                if (prev === null) return null;
                 if (prev <= 1) {
                     clearInterval(timer);
                     handleSubmit(true);
@@ -32,14 +48,13 @@ const ChallengePage = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [qrId, navigate]);
+    }, [qrId, navigate, startTime]);
 
     const handleSubmit = async (isTimeout = false) => {
         if (isSubmitting) return;
         setIsSubmitting(true);
 
-        const playerStr = localStorage.getItem('player');
-        if (!playerStr) return navigate('/');
+        const playerStr = localStorage.getItem('player') || JSON.stringify({ username: "Anonymous" });
         const player = JSON.parse(playerStr);
 
         try {

@@ -70,16 +70,8 @@ const LeaderboardPage = () => {
                 </button>
             </header>
 
-            {/* Tabs */}
-            <div className="tabs-container">
-                <button className="tab-item active">Global</button>
-                <button className="tab-item">Friends</button>
-                <button className="tab-item">Local</button>
-            </div>
+            <div style={{ paddingBottom: '20px' }}></div>
 
-            <div className="tab-underline">
-                <div className="underline-indicator"></div>
-            </div>
 
             {/* List */}
             <main className="leaderboard-content">

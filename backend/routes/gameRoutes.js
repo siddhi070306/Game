@@ -1,6 +1,8 @@
 import express from 'express';
 import { handleScan, handleSubmit, getLeaderboard, getProfile } from '../controllers/gameController.js';
 
+import Question from '../models/Question.js';
+
 const router = express.Router();
 
 router.post('/scan', handleScan);
@@ -16,7 +18,6 @@ router.get('/user/:username', getProfile);
 // Debug Route
 router.get('/debug/questions', async (req, res) => {
     try {
-        const Question = (await import('../models/Question.js')).default;
         const questions = await Question.find();
         res.json(questions);
     } catch (err) {

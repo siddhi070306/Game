@@ -1,0 +1,13 @@
+{
+    "watch": [
+        "."
+    ],
+    "ext": "js,mjs,json",
+    "ignore": [
+        "node_modules/",
+        "frontend/"
+    ],
+    "delay": "2500",
+    "legacyWatch": true,
+    "exec": "node server.js"
+}
