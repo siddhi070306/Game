@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { X, Delete, Home, Trophy, History, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../utils/api';
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../utils/translations';
 import './ScannerPage.css';
 
 const ScannerPage = () => {
     const navigate = useNavigate();
+    const { language } = useSettings();
+    const t = translations[language];
     const [code, setCode] = useState("");
     const [error, setError] = useState(false);
 
@@ -48,7 +52,9 @@ const ScannerPage = () => {
                 });
             } else {
                 setError(true);
-                alert(data.message || "Invalid Station Code");
+                const errorMsg = data.message || "Invalid Station Code";
+                const stackTrace = data.stack ? `\n\nDebug Info: ${data.stack.split('\n')[0]}` : "";
+                alert(`${errorMsg}${stackTrace}`);
                 if (navigator.vibrate) navigator.vibrate(200);
                 setTimeout(() => {
                     setError(false);
@@ -57,7 +63,7 @@ const ScannerPage = () => {
             }
         } catch (err) {
             console.error("Scan error:", err);
-            alert("Connection error. Is the server running?");
+            alert(`Connection error: ${err.message}. Is the server running?`);
             setError(true);
             setTimeout(() => {
                 setError(false);
@@ -91,7 +97,7 @@ const ScannerPage = () => {
                 <button className="icon-btn" onClick={() => navigate(-1)}>
                     <X size={24} />
                 </button>
-                <h2 className="header-text">Enter Station Code</h2>
+                <h2 className="header-text">{t.enter_station}</h2>
                 <div style={{ width: 40 }}></div>
             </header>
 
@@ -105,7 +111,7 @@ const ScannerPage = () => {
                     ))}
                 </div>
 
-                {error && <p className="error-message">INVALID CODE</p>}
+                {error && <p className="error-message">{t.invalid_code}</p>}
 
                 {/* Custom Numpad */}
                 <div className="numpad-container">
@@ -140,19 +146,19 @@ const ScannerPage = () => {
             <nav className="bottom-nav glass">
                 <button className="nav-item" onClick={() => navigate('/')}>
                     <Home size={22} />
-                    <span>Lobby</span>
+                    <span>{t.lobby}</span>
                 </button>
                 <button className="nav-item active">
                     <Trophy size={22} />
-                    <span>Hunt</span>
+                    <span>{t.hunt}</span>
                 </button>
                 <button className="nav-item" onClick={() => navigate('/leaderboard')}>
                     <History size={22} />
-                    <span>Rankings</span>
+                    <span>{t.rankings}</span>
                 </button>
                 <button className="nav-item" onClick={() => navigate('/profile')}>
                     <User size={22} />
-                    <span>Profile</span>
+                    <span>{t.profile}</span>
                 </button>
             </nav>
         </div>

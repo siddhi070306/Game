@@ -2,10 +2,14 @@ import React from 'react';
 import { X, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import API_BASE_URL from '../utils/api';
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../utils/translations';
 import './ChallengePage.css';
 
 const ChallengePage = () => {
     const navigate = useNavigate();
+    const { language } = useSettings();
+    const t = translations[language];
     const location = useLocation();
     const { question, qrId } = location.state || { question: "No question loaded.", qrId: "" };
 
@@ -70,8 +74,8 @@ const ChallengePage = () => {
                     <X size={24} />
                 </button>
                 <div className="phase-info">
-                    <span className="phase-subtitle">STATION: {qrId}</span>
-                    <h3 className="question-count">PRESSURE COOKER</h3>
+                    <span className="phase-subtitle">{t.station}: {qrId}</span>
+                    <h3 className="question-count">{t.pressure_cooker}</h3>
                 </div>
                 <div style={{ width: 40 }} />
             </header>
@@ -91,14 +95,14 @@ const ChallengePage = () => {
                         </svg>
                         <div className="time-display">
                             <span className="time-value">{timeLeft}</span>
-                            <span className="time-unit">SECONDS</span>
+                            <span className="time-unit">{t.seconds}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Question Section */}
                 <div className="question-section">
-                    <p className="current-challenge-label">CURRENT CHALLENGE</p>
+                    <p className="current-challenge-label">{t.current_challenge}</p>
                     <h1 className="question-text">
                         {question}
                     </h1>
@@ -106,7 +110,7 @@ const ChallengePage = () => {
 
                 {/* Answer Input */}
                 <div className="input-section">
-                    <label className="input-label">Your Answer</label>
+                    <label className="input-label">{t.your_answer}</label>
                     <div className="answer-box">
                         <textarea
                             placeholder="Type quickly..."
@@ -125,7 +129,7 @@ const ChallengePage = () => {
                         onClick={() => handleSubmit()}
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? 'LOCKING IN...' : 'SUBMIT ANSWER'} <ChevronRight size={20} />
+                        {isSubmitting ? t.locking_in : t.submit_answer} <ChevronRight size={20} />
                     </button>
                 </div>
             </main>

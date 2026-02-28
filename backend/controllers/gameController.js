@@ -5,10 +5,12 @@ import Question from '../models/Question.js';
 // @route   POST /api/scan
 export const handleScan = async (req, res) => {
     const { username, qrId } = req.body;
+    console.log(`Scan Request: User=${username}, Station=${qrId}`);
 
     try {
         let user = await User.findOne({ username });
         if (!user) {
+            console.log(`Creating new user: ${username}`);
             user = await User.create({ username });
         }
 
@@ -19,6 +21,7 @@ export const handleScan = async (req, res) => {
 
         const question = await Question.findOne({ qrId });
         if (!question) {
+            console.log(`Question not found for QR: ${qrId}`);
             return res.status(404).json({ message: "Invalid QR code" });
         }
 
@@ -27,10 +30,12 @@ export const handleScan = async (req, res) => {
         user.activeQrId = qrId;
         await user.save();
 
+        console.log(`Scan successful for ${username} at station ${qrId}`);
         // 3. Return ONLY questionText
         res.status(200).json({ questionText: question.questionText });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("HandleScan Full Error:", error);
+        res.status(500).json({ message: error.message, stack: error.stack });
     }
 };
 

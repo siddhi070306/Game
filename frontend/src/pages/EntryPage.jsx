@@ -1,10 +1,14 @@
 import React from 'react';
 import { Timer, Zap, User, ChevronRight, Home, Trophy, BarChart2, User as UserIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../utils/translations';
 import './EntryPage.css';
 
 const EntryPage = () => {
     const navigate = useNavigate();
+    const { language } = useSettings();
+    const t = translations[language];
     const [username, setUsername] = React.useState('');
 
     React.useEffect(() => {
@@ -15,7 +19,7 @@ const EntryPage = () => {
     }, [navigate]);
 
     const handleStart = () => {
-        if (!username.trim()) return alert("IDENTIFY YOURSELF, HUNTER!");
+        if (!username.trim()) return alert(t.identify_yourself);
         localStorage.setItem('player', JSON.stringify({ username: username.trim() }));
         navigate('/scan');
     };
@@ -40,17 +44,17 @@ const EntryPage = () => {
                 </div>
 
                 <h1 className="main-title">
-                    PRESSURE <br />
-                    <span className="subtitle">COOKER</span>
+                    {t.pressure_cooker.split(' ')[0]} <br />
+                    <span className="subtitle">{t.pressure_cooker.split(' ')[1] || ''}</span>
                 </h1>
 
                 <p className="description">
-                    The clock is ticking. Enter your name <br /> to join the hunt.
+                    {t.description}
                 </p>
 
                 {/* Input Form */}
                 <div className="input-group">
-                    <label className="input-label">PLAYER NAME</label>
+                    <label className="input-label">{t.player_name}</label>
                     <div className="input-wrapper">
                         <User size={18} className="field-icon" />
                         <input
@@ -67,19 +71,19 @@ const EntryPage = () => {
                     className="btn-primary start-btn"
                     onClick={handleStart}
                 >
-                    START GAME <ChevronRight size={20} />
+                    {t.start_game} <ChevronRight size={20} />
                 </button>
 
                 {/* Quick Stats */}
                 <div className="quick-stats">
                     <div className="stat-item">
                         <span className="stat-value">1.2k</span>
-                        <span className="stat-label">ACTIVE HUNTERS</span>
+                        <span className="stat-label">{t.active_hunters}</span>
                     </div>
                     <div className="stat-divider"></div>
                     <div className="stat-item">
                         <span className="stat-value">48s</span>
-                        <span className="stat-label">AVG. SURVIVE</span>
+                        <span className="stat-label">{t.avg_survive}</span>
                     </div>
                 </div>
             </main>
@@ -88,19 +92,19 @@ const EntryPage = () => {
             <nav className="bottom-nav glass">
                 <button className="nav-item active" onClick={() => navigate('/')}>
                     <Home size={22} />
-                    <span>Home</span>
+                    <span>{t.home}</span>
                 </button>
                 <button className="nav-item" onClick={() => navigate('/leaderboard')}>
                     <Trophy size={22} />
-                    <span>Trophy</span>
+                    <span>{t.trophy}</span>
                 </button>
                 <button className="nav-item">
                     <BarChart2 size={22} />
-                    <span>Stats</span>
+                    <span>{t.stats}</span>
                 </button>
                 <button className="nav-item" onClick={() => navigate('/profile')}>
                     <UserIcon size={22} />
-                    <span>Profile</span>
+                    <span>{t.profile}</span>
                 </button>
             </nav>
         </div>

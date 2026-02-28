@@ -1,6 +1,6 @@
 const getApiBaseUrl = () => {
     const hostname = window.location.hostname;
-    return `http://${hostname}:5001`;
+    return `http://${hostname}:5002`;
 };
 
 const API_BASE_URL = getApiBaseUrl();

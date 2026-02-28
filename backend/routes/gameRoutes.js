@@ -13,4 +13,15 @@ router.post('/submit', (req, res) => {
 router.get('/leaderboard', getLeaderboard);
 router.get('/user/:username', getProfile);
 
+// Debug Route
+router.get('/debug/questions', async (req, res) => {
+    try {
+        const Question = (await import('../models/Question.js')).default;
+        const questions = await Question.find();
+        res.json(questions);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 export default router;

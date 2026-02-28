@@ -14,9 +14,10 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0, // Measures seconds taken
     },
-    answeredQuestions: [{
-        type: String // Stores solved QR IDs
-    }],
+    answeredQuestions: {
+        type: [String],
+        default: []
+    },
     currentQuestionStartTime: {
         type: Date,
     },
