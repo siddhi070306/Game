@@ -1,5 +1,7 @@
 import User from '../models/User.js';
 import Question from '../models/Question.js';
+import translate from 'google-translate-api-x';
+import stringSimilarity from 'string-similarity';
 
 // @desc    Login or register a user with PIN
 // @route   POST /api/login
@@ -20,7 +22,11 @@ export const loginPlayer = async (req, res) => {
         }
 
         // Scenario B: User exists, verify PIN
-        if (user.pin !== pin) {
+        if (!user.pin) {
+            // Legacy user with no PIN - set the PIN for them
+            user.pin = pin;
+            await user.save();
+        } else if (user.pin !== pin) {
             return res.status(401).json({ message: "Username taken or incorrect PIN" });
         }
 
@@ -33,8 +39,8 @@ export const loginPlayer = async (req, res) => {
 // @desc    Initiate a scan for a specific QR code
 // @route   POST /api/scan
 export const handleScan = async (req, res) => {
-    const { userId, qrId } = req.body;
-    console.log(`Scan Request: UserID=${userId}, Station=${qrId}`);
+    const { userId, qrId, lang = 'en' } = req.body;
+    console.log(`Scan Request: UserID=${userId}, Station=${qrId}, Target Lang=${lang}`);
 
     try {
         let user = await User.findById(userId);
@@ -62,10 +68,23 @@ export const handleScan = async (req, res) => {
             await user.save();
         }
 
+        let finalQuestionText = question.questionText;
+
+        if (lang !== 'en') {
+            try {
+                const transRes = await translate(finalQuestionText, { to: lang });
+                if (transRes && transRes.text) {
+                    finalQuestionText = transRes.text;
+                }
+            } catch (err) {
+                console.error("Question translation failed, falling back to English.");
+            }
+        }
+
         console.log(`Scan successful for ${user.username} at station ${qrId}`);
         // 3. Return questionText and startTime for timer persistence
         res.status(200).json({
-            questionText: question.questionText,
+            questionText: finalQuestionText,
             startTime: user.currentQuestionStartTime
         });
     } catch (error) {
@@ -117,9 +136,22 @@ export const handleSubmit = async (req, res, io) => {
 
 
 
-        const normalizedUserAnswer = answer.trim().toLowerCase().replace(/\s\s+/g, ' ');
+        let normalizedUserAnswer = answer.trim().toLowerCase().replace(/\s\s+/g, ' ');
         const normalizedCorrectAnswer = question.correctAnswer.trim().toLowerCase().replace(/\s\s+/g, ' ');
-        const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+
+        try {
+            // Translate whatever the user typed into English so we can do a fair comparison
+            const transRes = await translate(normalizedUserAnswer, { to: 'en' });
+            if (transRes && transRes.text) {
+                normalizedUserAnswer = transRes.text.toLowerCase().replace(/\s\s+/g, ' ');
+            }
+        } catch (err) {
+            console.error("Answer evaluation translation failed:", err);
+        }
+
+        // Allow for minor spelling variations (e.g. at least 70% match) or substring hits
+        const similarity = stringSimilarity.compareTwoStrings(normalizedUserAnswer, normalizedCorrectAnswer);
+        const isCorrect = similarity >= 0.70 || normalizedUserAnswer.includes(normalizedCorrectAnswer) || normalizedCorrectAnswer.includes(normalizedUserAnswer);
 
         // 5. Scoring
         if (isCorrect) {
