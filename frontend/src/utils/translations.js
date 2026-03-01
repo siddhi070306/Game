@@ -36,7 +36,13 @@ export const translations = {
         logout_confirm: "ARE YOU SURE YOU WANT TO SIGN OUT, OPERATOR?",
         connection_error: "Connection error. Is the server running?",
         timeout_err: "Timeout: 60 seconds exceeded",
-        stations_summary: "MISSIONS SUMMARY"
+        stations_summary: "MISSIONS SUMMARY",
+        rules_title: "How to Play",
+        rule_1: "Enter the hidden Station ID to unlock challenges.",
+        rule_2: "Solve challenges correctly to earn 10 points.",
+        rule_3: "Stuck? Request a hint for a 5-point penalty.",
+        rule_4: "Be fast! Ties are decided by total completion time.",
+        close_btn: "Close"
     },
     hi: {
         lobby: "लॉबी",
@@ -75,7 +81,13 @@ export const translations = {
         logout_confirm: "क्या आप वाकई साइन आउट करना चाहते हैं, ऑपरेटर?",
         connection_error: "कनेक्शन त्रुटि। क्या सर्वर चल रहा है?",
         timeout_err: "समय समाप्त: 60 सेकंड से ऊपर",
-        stations_summary: "मिशन सारांश"
+        stations_summary: "मिशन सारांश",
+        rules_title: "कैसे खेलें",
+        rule_1: "चुनौतियों को अनलॉक करने के लिए छिपा हुआ स्टेशन आईडी दर्ज करें।",
+        rule_2: "10 अंक अर्जित करने के लिए चुनौतियों को सही ढंग से हल करें।",
+        rule_3: "फंस गए? 5 अंक पेनल्टी के साथ संकेत (Hint) का उपयोग करें।",
+        rule_4: "तेज़ रहें! कुल समय के आधार पर टाई (Ties) तोड़े जाते हैं।",
+        close_btn: "बंद करें"
     },
     mr: {
         lobby: "लॉबी",
@@ -114,6 +126,12 @@ export const translations = {
         logout_confirm: "तुम्हाला खात्री आहे की तुम्ही साइन आउट करू इच्छिता?",
         connection_error: "कनेक्शन एरर. सर्व्हर चालू आहे का?",
         timeout_err: "वेळ संपली: ६० सेकंद पूर्ण",
-        stations_summary: "मिशन सारांश"
+        stations_summary: "मिशन सारांश",
+        rules_title: "कसे खेळायचे",
+        rule_1: "आव्हाने अनलॉक करण्यासाठी लपलेला स्टेशन आयडी (ID) टाका.",
+        rule_2: "10 गुण मिळवण्यासाठी आव्हाने अचूकपणे सोडवा.",
+        rule_3: "अडकलात? 5 गुणांच्या पेनल्टीसह हिंट (Hint) वापरा.",
+        rule_4: "जलद रहा! एकूण वेळेनुसार टाय (Ties) सोडवले जातात.",
+        close_btn: "बंद करा"
     }
 };

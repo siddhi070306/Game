@@ -211,3 +211,41 @@
     font-weight: bold;
     box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
 }
+
+.hint-btn {
+    background: rgba(234, 179, 8, 0.15);
+    border: 1px solid rgba(234, 179, 8, 0.4);
+    color: #facc15;
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.hint-btn:hover {
+    background: rgba(234, 179, 8, 0.25);
+}
+
+.hint-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.hint-display {
+    background: rgba(234, 179, 8, 0.1);
+    border-left: 3px solid #facc15;
+    padding: 12px;
+    border-radius: 4px 8px 8px 4px;
+    color: #fef08a;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.4;
+}

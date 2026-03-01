@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, RefreshCw, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Home, RefreshCw, CheckCircle, XCircle, Clock, Lightbulb } from 'lucide-react';
 import API_BASE_URL from '../utils/api';
 import './AdminDashboard.css';
 
@@ -82,20 +82,29 @@ const AdminDashboard = () => {
                                                 {user.submissionHistory.map((sub, i) => (
                                                     <li key={i} className={`submission-item ${sub.isCorrect ? 'correct' : 'wrong'}`}>
                                                         <div className="sub-header">
-                                                            <span className="qr-id">Station: {sub.qrId}</span>
+                                                            <span className="qr-id">
+                                                                Station: {sub.qrId}
+                                                                {sub.usedHint && <Lightbulb size={12} color="#f59e0b" style={{ marginLeft: '6px', verticalAlign: 'middle' }} />}
+                                                            </span>
                                                             <span className="sub-time">
                                                                 <Clock size={12} /> {sub.timeTaken.toFixed(1)}s
                                                             </span>
                                                         </div>
                                                         <div className="sub-answers">
                                                             <div className="user-ans">
-                                                                <strong>Ans:</strong> {sub.userAnswer}
+                                                                <strong style={sub.userAnswer && sub.userAnswer.includes("ANTI-CHEAT") ? { color: '#ef4444' } : {}}>Ans:</strong>
+                                                                <span style={sub.userAnswer && sub.userAnswer.includes("ANTI-CHEAT") ? { color: '#ef4444', fontWeight: 'bold', marginLeft: '4px' } : { marginLeft: '4px' }}>
+                                                                    {sub.userAnswer}
+                                                                </span>
                                                             </div>
                                                             {!sub.isCorrect && (
                                                                 <div className="correct-ans">
                                                                     <strong>Correct:</strong> {sub.correctAnswer}
                                                                 </div>
                                                             )}
+                                                            <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px' }}>
+                                                                {sub.submittedAt ? new Date(sub.submittedAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true, month: 'short', day: 'numeric' }) : "N/A"}
+                                                            </div>
                                                         </div>
                                                         <div className="sub-status">
                                                             {sub.isCorrect ? <CheckCircle size={16} /> : <XCircle size={16} />}

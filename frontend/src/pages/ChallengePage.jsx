@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ChevronRight } from 'lucide-react';
+import { X, ChevronRight, Lightbulb } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import API_BASE_URL from '../utils/api';
 import { useSettings } from '../context/SettingsContext';
@@ -16,6 +16,41 @@ const ChallengePage = () => {
     const [timeLeft, setTimeLeft] = React.useState(null);
     const [answer, setAnswer] = React.useState('');
     const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [hint, setHint] = React.useState(null);
+    const [isRequestingHint, setIsRequestingHint] = React.useState(false);
+    const isConfirmingRef = React.useRef(false);
+
+    const handleGetHint = async () => {
+        if (hint || isRequestingHint) return;
+
+        isConfirmingRef.current = true;
+        const confirmHint = window.confirm("Use a hint? This will cost you 5 points!");
+        setTimeout(() => { isConfirmingRef.current = false; }, 300);
+
+        if (!confirmHint) return;
+
+        setIsRequestingHint(true);
+        const playerStr = localStorage.getItem('player') || JSON.stringify({ username: "Anonymous" });
+        const player = JSON.parse(playerStr);
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/hint`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: player.userId, qrId })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setHint(data.hint);
+            } else {
+                alert(data.message || "Failed to get hint");
+            }
+        } catch (error) {
+            console.error("Hint error:", error);
+        } finally {
+            setIsRequestingHint(false);
+        }
+    };
 
     React.useEffect(() => {
         if (!qrId) return navigate('/scan');
@@ -50,12 +85,26 @@ const ChallengePage = () => {
         return () => clearInterval(timer);
     }, [qrId, navigate, startTime]);
 
-    const handleSubmit = async (isTimeout = false) => {
-        if (isSubmitting) return;
+    const answerRef = React.useRef(answer);
+    const isSubmittingRef = React.useRef(isSubmitting);
+
+    React.useEffect(() => {
+        answerRef.current = answer;
+        isSubmittingRef.current = isSubmitting;
+    }, [answer, isSubmitting]);
+
+    const handleSubmit = async (isTimeout = false, forcedAnswer = null, isCheat = false) => {
+        if (isSubmittingRef.current) return;
         setIsSubmitting(true);
+        isSubmittingRef.current = true;
 
         const playerStr = localStorage.getItem('player') || JSON.stringify({ username: "Anonymous" });
         const player = JSON.parse(playerStr);
+
+        let finalAnswer = answerRef.current;
+        if (isTimeout) finalAnswer = "TIMEOUT";
+        else if (isCheat) finalAnswer = "ANTI-CHEAT: TAB SWITCHED";
+        else if (forcedAnswer !== null) finalAnswer = forcedAnswer;
 
         try {
             const response = await fetch(`${API_BASE_URL}/api/submit`, {
@@ -64,7 +113,7 @@ const ChallengePage = () => {
                 body: JSON.stringify({
                     userId: player.userId,
                     qrId,
-                    answer: isTimeout ? "" : answer
+                    answer: finalAnswer
                 })
             });
 
@@ -80,6 +129,29 @@ const ChallengePage = () => {
             navigate('/scan');
         }
     };
+
+    React.useEffect(() => {
+        const handleAntiCheat = () => {
+            // If already submitting or time is out, or confirming hint, do nothing
+            if (isSubmittingRef.current || isConfirmingRef.current) return;
+
+            // Auto submit their current typed answer
+            alert("ANTI-CHEAT TRIGGERED: You left the app or switched tabs. Your challenge has been failed.");
+            handleSubmit(false, null, true);
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) handleAntiCheat();
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('blur', handleAntiCheat);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('blur', handleAntiCheat);
+        };
+    }, []);
 
     return (
         <div className="challenge-page animate-fade">
@@ -125,7 +197,21 @@ const ChallengePage = () => {
 
                 {/* Answer Input */}
                 <div className="input-section">
-                    <label className="input-label">{t.your_answer}</label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '12px' }}>
+                        <label className="input-label" style={{ marginBottom: 0 }}>{t.your_answer}</label>
+                        {!hint && (
+                            <button className="hint-btn" onClick={handleGetHint} disabled={isRequestingHint}>
+                                <Lightbulb size={14} /> {isRequestingHint ? '...' : 'Hint (-5 pts)'}
+                            </button>
+                        )}
+                    </div>
+
+                    {hint && (
+                        <div className="hint-display">
+                            <Lightbulb size={16} /> <span><strong>Hint:</strong> {hint}</span>
+                        </div>
+                    )}
+
                     {options && options.length > 0 ? (
                         <div className="options-grid">
                             {options.map((opt, idx) => (

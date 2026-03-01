@@ -72,25 +72,43 @@ export const handleScan = async (req, res) => {
         let finalOptions = question.options || [];
 
         if (lang !== 'en') {
-            try {
-                const transRes = await translate(finalQuestionText, { to: lang });
-                if (transRes && transRes.text) {
-                    finalQuestionText = transRes.text;
-                }
+            // Priority 1: Use hardcoded/human translation if available
+            if (question.translations && question.translations.get(lang)) {
+                finalQuestionText = question.translations.get(lang);
 
-                // Translate the buttons/options as well
+                // Option translation fallback (if needed)
                 if (finalOptions.length > 0) {
-                    const optsRes = await translate(finalOptions, { to: lang });
-                    if (optsRes) {
-                        if (Array.isArray(optsRes)) {
-                            finalOptions = optsRes.map(res => res.text);
-                        } else if (optsRes.text) {
-                            finalOptions = [optsRes.text];
+                    try {
+                        const optsRes = await translate(finalOptions, { to: lang });
+                        if (optsRes) {
+                            if (Array.isArray(optsRes)) finalOptions = optsRes.map(res => res.text);
+                            else if (optsRes.text) finalOptions = [optsRes.text];
+                        }
+                    } catch (err) { }
+                }
+            } else {
+                // Priority 2: Use Google Translate API fallback
+                try {
+                    const transRes = await translate(finalQuestionText, { to: lang });
+                    if (transRes && transRes.text) {
+                        finalQuestionText = transRes.text;
+
+                        if (lang === 'hi' || lang === 'mr') {
+                            finalQuestionText = finalQuestionText.replace(/मामा/g, 'काका');
+                            finalQuestionText = finalQuestionText.replace(/अंकल/gi, 'काका');
                         }
                     }
+
+                    if (finalOptions.length > 0) {
+                        const optsRes = await translate(finalOptions, { to: lang });
+                        if (optsRes) {
+                            if (Array.isArray(optsRes)) finalOptions = optsRes.map(res => res.text);
+                            else if (optsRes.text) finalOptions = [optsRes.text];
+                        }
+                    }
+                } catch (err) {
+                    console.error("Question translation failed, falling back to English.");
                 }
-            } catch (err) {
-                console.error("Question translation failed, falling back to English.");
             }
         }
 
@@ -121,6 +139,8 @@ export const handleSubmit = async (req, res, io) => {
             return res.status(400).json({ message: "Invalid challenge session" });
         }
 
+        const usedHint = user.hintsUsed.includes(qrId);
+
         // 2. Calculate time taken
         const timeTaken = (Date.now() - user.currentQuestionStartTime) / 1000;
 
@@ -134,7 +154,8 @@ export const handleSubmit = async (req, res, io) => {
                 userAnswer: "TIMEOUT",
                 correctAnswer: "N/A",
                 isCorrect: false,
-                timeTaken: 60
+                timeTaken: 60,
+                usedHint
             });
 
             user.answeredQuestions.push(qrId);
@@ -153,23 +174,34 @@ export const handleSubmit = async (req, res, io) => {
         let normalizedUserAnswer = answer.trim().toLowerCase().replace(/\s\s+/g, ' ');
         const normalizedCorrectAnswer = question.correctAnswer.trim().toLowerCase().replace(/\s\s+/g, ' ');
 
-        // 1. First check if it's already an exact match (this saves us from translating Movie Titles like "Lagaan" into "Tax")
-        let isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+        let isCorrect = false;
 
-        // 2. If it's not an exact match, try translating it to see if they answered correctly in another language
-        if (!isCorrect) {
-            try {
-                const transRes = await translate(normalizedUserAnswer, { to: 'en' });
-                if (transRes && transRes.text) {
-                    normalizedUserAnswer = transRes.text.toLowerCase().replace(/\s\s+/g, ' ');
+        // CRITICAL FIX: If the answer is completely blank or N/A (caused by anti-cheat/timeout),
+        // it must be instantly marked false, otherwise `includes("")` evaluates to TRUE for empty strings!
+        if (
+            normalizedUserAnswer !== "" &&
+            normalizedUserAnswer !== "n/a" &&
+            normalizedUserAnswer !== "timeout" &&
+            !normalizedUserAnswer.includes("anti-cheat")
+        ) {
+            // 1. First check if it's already an exact match (this saves us from translating Movie Titles like "Lagaan" into "Tax")
+            isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+
+            // 2. If it's not an exact match, try translating it to see if they answered correctly in another language
+            if (!isCorrect) {
+                try {
+                    const transRes = await translate(normalizedUserAnswer, { to: 'en' });
+                    if (transRes && transRes.text) {
+                        normalizedUserAnswer = transRes.text.toLowerCase().replace(/\s\s+/g, ' ');
+                    }
+                } catch (err) {
+                    console.error("Answer evaluation translation failed:", err);
                 }
-            } catch (err) {
-                console.error("Answer evaluation translation failed:", err);
-            }
 
-            // Allow for spelling variations (e.g. 70%) or substring hits
-            const similarity = stringSimilarity.compareTwoStrings(normalizedUserAnswer, normalizedCorrectAnswer);
-            isCorrect = similarity >= 0.70 || normalizedUserAnswer.includes(normalizedCorrectAnswer) || normalizedCorrectAnswer.includes(normalizedUserAnswer);
+                // Allow for spelling variations (e.g. 70%) or substring hits
+                const similarity = stringSimilarity.compareTwoStrings(normalizedUserAnswer, normalizedCorrectAnswer);
+                isCorrect = similarity >= 0.70 || normalizedUserAnswer.includes(normalizedCorrectAnswer) || normalizedCorrectAnswer.includes(normalizedUserAnswer);
+            }
         }
 
         // 5. Scoring
@@ -185,7 +217,8 @@ export const handleSubmit = async (req, res, io) => {
             userAnswer: answer,
             correctAnswer: question.correctAnswer,
             isCorrect,
-            timeTaken
+            timeTaken,
+            usedHint
         });
 
         // 7. Finalize: Add time, clear state
@@ -246,6 +279,50 @@ export const getAllUsers = async (req, res) => {
     try {
         const users = await User.find().sort({ score: -1, totalActiveTime: 1 }).select('-pin -__v');
         res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get a hint for the active question (-5 points)
+// @route   POST /api/hint
+export const getHint = async (req, res) => {
+    const { userId, qrId } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (user.activeQrId !== qrId) {
+            return res.status(400).json({ message: "Invalid session for hint" });
+        }
+
+        // Apply penalty if not already used on this station
+        if (!user.hintsUsed) user.hintsUsed = [];
+        if (!user.hintsUsed.includes(qrId)) {
+            user.score -= 5;
+            user.hintsUsed.push(qrId);
+            await user.save();
+        }
+
+        const question = await Question.findOne({ qrId });
+        if (!question) return res.status(404).json({ message: "Question not found" });
+
+        // Generate generic hint if a custom one doesn't exist
+        let hintText = question.hint;
+        if (!hintText || hintText.trim() === "") {
+            const ans = question.correctAnswer;
+            // Generate basic logic hint based on answer
+            if (ans.length > 3 && isNaN(ans)) {
+                hintText = `Starts with '${ans.substring(0, 2)}' and ends with '${ans.slice(-1)}'`;
+            } else if (!isNaN(ans) && ans.length > 1) {
+                hintText = `It is a ${ans.length}-digit number.`;
+            } else {
+                hintText = `The length of the answer is ${ans.length} character(s).`;
+            }
+        }
+
+        res.status(200).json({ hint: hintText, newScore: user.score });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

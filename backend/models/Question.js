@@ -18,6 +18,15 @@ const questionSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
+    hint: {
+        type: String,
+        default: ""
+    },
+    translations: {
+        type: Map,
+        of: String,
+        default: {}
+    },
     isCompleted: {
         type: Boolean,
         default: false

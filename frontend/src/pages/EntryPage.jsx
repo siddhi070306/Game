@@ -134,18 +134,6 @@ const EntryPage = () => {
                     {isSubmitting ? 'CONNECTING...' : t.start_game} <ChevronRight size={20} />
                 </button>
 
-                {/* Quick Stats */}
-                <div className="quick-stats">
-                    <div className="stat-item">
-                        <span className="stat-value">1.2k</span>
-                        <span className="stat-label">{t.active_hunters}</span>
-                    </div>
-                    <div className="stat-divider"></div>
-                    <div className="stat-item">
-                        <span className="stat-value">48s</span>
-                        <span className="stat-label">{t.avg_survive}</span>
-                    </div>
-                </div>
             </main>
 
             {/* Bottom Nav */}

@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginPlayer, handleScan, handleSubmit, getLeaderboard, getProfile, getAllUsers } from '../controllers/gameController.js';
+import { loginPlayer, handleScan, handleSubmit, getLeaderboard, getProfile, getAllUsers, getHint } from '../controllers/gameController.js';
 
 import Question from '../models/Question.js';
 
@@ -12,6 +12,8 @@ router.post('/submit', (req, res) => {
     // We pass the io instance from the request app settings
     handleSubmit(req, res, req.app.get('socketio'));
 });
+
+router.post('/hint', getHint);
 
 router.get('/leaderboard', getLeaderboard);
 router.get('/user/:username', getProfile);

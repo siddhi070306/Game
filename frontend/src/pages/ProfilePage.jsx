@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronLeft, User, Trophy, Clock, CheckCircle, Home, BarChart2, LogOut } from 'lucide-react';
+import { ChevronLeft, User, Trophy, Clock, CheckCircle, Home, BarChart2, LogOut, Lightbulb } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../utils/translations';
@@ -137,7 +137,8 @@ const ProfilePage = () => {
                                             <CheckCircle size={18} className={sub.isCorrect ? "check-icon" : "wrong-icon"} />
                                             <span>STATION: {sub.qrId}</span>
                                         </div>
-                                        <div className="status-badge" style={{ color: sub.isCorrect ? '#10b981' : '#ef4444' }}>
+                                        <div className="status-badge" style={{ color: sub.isCorrect ? '#10b981' : '#ef4444', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            {sub.usedHint && <Lightbulb size={14} color="#f59e0b" />}
                                             {sub.isCorrect ? 'PASSED' : 'FAILED'}
                                         </div>
                                     </div>
@@ -146,7 +147,9 @@ const ProfilePage = () => {
                                         <div className="station-details animate-expand">
                                             <div className="detail-row">
                                                 <span className="detail-label">YOUR ANSWER:</span>
-                                                <span className="detail-value">{sub.userAnswer || "N/A"}</span>
+                                                <span className="detail-value" style={sub.userAnswer && sub.userAnswer.includes("ANTI-CHEAT") ? { color: '#ef4444', fontWeight: 'bold' } : {}}>
+                                                    {sub.userAnswer || "N/A"}
+                                                </span>
                                             </div>
                                             <div className="detail-row">
                                                 <span className="detail-label">CORRECT:</span>
@@ -155,6 +158,10 @@ const ProfilePage = () => {
                                             <div className="detail-row">
                                                 <span className="detail-label">TIME:</span>
                                                 <span className="detail-value">{Math.round(sub.timeTaken)}s</span>
+                                            </div>
+                                            <div className="detail-row">
+                                                <span className="detail-label">TIMESTAMP:</span>
+                                                <span className="detail-value">{sub.submittedAt ? new Date(sub.submittedAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true, month: 'short', day: 'numeric' }) : "N/A"}</span>
                                             </div>
                                         </div>
                                     )}

@@ -22,12 +22,17 @@ const userSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
+    hintsUsed: {
+        type: [String],
+        default: []
+    },
     submissionHistory: [{
         qrId: { type: String },
         userAnswer: { type: String },
         correctAnswer: { type: String },
         isCorrect: { type: Boolean },
         timeTaken: { type: Number },
+        usedHint: { type: Boolean, default: false },
         submittedAt: { type: Date, default: Date.now }
     }],
     currentQuestionStartTime: {
