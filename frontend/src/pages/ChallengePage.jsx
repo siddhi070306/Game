@@ -11,7 +11,7 @@ const ChallengePage = () => {
     const { language } = useSettings();
     const t = translations[language];
     const location = useLocation();
-    const { question, qrId, startTime } = location.state || { question: "No question loaded.", qrId: "", startTime: null };
+    const { question, qrId, startTime, options } = location.state || { question: "No question loaded.", qrId: "", startTime: null, options: [] };
 
     const [timeLeft, setTimeLeft] = React.useState(null);
     const [answer, setAnswer] = React.useState('');
@@ -126,15 +126,30 @@ const ChallengePage = () => {
                 {/* Answer Input */}
                 <div className="input-section">
                     <label className="input-label">{t.your_answer}</label>
-                    <div className="answer-box">
-                        <textarea
-                            placeholder="Type quickly..."
-                            className="answer-textarea"
-                            value={answer}
-                            onChange={(e) => setAnswer(e.target.value)}
-                            disabled={isSubmitting}
-                        />
-                    </div>
+                    {options && options.length > 0 ? (
+                        <div className="options-grid">
+                            {options.map((opt, idx) => (
+                                <button
+                                    key={idx}
+                                    className={`option-btn ${answer === opt ? 'selected' : ''}`}
+                                    onClick={() => setAnswer(opt)}
+                                    disabled={isSubmitting}
+                                >
+                                    {opt}
+                                </button>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="answer-box">
+                            <textarea
+                                placeholder="Type quickly..."
+                                className="answer-textarea"
+                                value={answer}
+                                onChange={(e) => setAnswer(e.target.value)}
+                                disabled={isSubmitting}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {/* Bottom Button */}

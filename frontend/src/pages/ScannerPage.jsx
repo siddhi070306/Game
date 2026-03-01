@@ -48,7 +48,8 @@ const ScannerPage = () => {
                     state: {
                         question: data.questionText,
                         qrId: inputCode,
-                        startTime: data.startTime
+                        startTime: data.startTime,
+                        options: data.options
                     }
                 });
             } else {

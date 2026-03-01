@@ -69,12 +69,25 @@ export const handleScan = async (req, res) => {
         }
 
         let finalQuestionText = question.questionText;
+        let finalOptions = question.options || [];
 
         if (lang !== 'en') {
             try {
                 const transRes = await translate(finalQuestionText, { to: lang });
                 if (transRes && transRes.text) {
                     finalQuestionText = transRes.text;
+                }
+
+                // Translate the buttons/options as well
+                if (finalOptions.length > 0) {
+                    const optsRes = await translate(finalOptions, { to: lang });
+                    if (optsRes) {
+                        if (Array.isArray(optsRes)) {
+                            finalOptions = optsRes.map(res => res.text);
+                        } else if (optsRes.text) {
+                            finalOptions = [optsRes.text];
+                        }
+                    }
                 }
             } catch (err) {
                 console.error("Question translation failed, falling back to English.");
@@ -85,6 +98,7 @@ export const handleScan = async (req, res) => {
         // 3. Return questionText and startTime for timer persistence
         res.status(200).json({
             questionText: finalQuestionText,
+            options: finalOptions,
             startTime: user.currentQuestionStartTime
         });
     } catch (error) {
@@ -139,19 +153,24 @@ export const handleSubmit = async (req, res, io) => {
         let normalizedUserAnswer = answer.trim().toLowerCase().replace(/\s\s+/g, ' ');
         const normalizedCorrectAnswer = question.correctAnswer.trim().toLowerCase().replace(/\s\s+/g, ' ');
 
-        try {
-            // Translate whatever the user typed into English so we can do a fair comparison
-            const transRes = await translate(normalizedUserAnswer, { to: 'en' });
-            if (transRes && transRes.text) {
-                normalizedUserAnswer = transRes.text.toLowerCase().replace(/\s\s+/g, ' ');
-            }
-        } catch (err) {
-            console.error("Answer evaluation translation failed:", err);
-        }
+        // 1. First check if it's already an exact match (this saves us from translating Movie Titles like "Lagaan" into "Tax")
+        let isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
 
-        // Allow for minor spelling variations (e.g. at least 70% match) or substring hits
-        const similarity = stringSimilarity.compareTwoStrings(normalizedUserAnswer, normalizedCorrectAnswer);
-        const isCorrect = similarity >= 0.70 || normalizedUserAnswer.includes(normalizedCorrectAnswer) || normalizedCorrectAnswer.includes(normalizedUserAnswer);
+        // 2. If it's not an exact match, try translating it to see if they answered correctly in another language
+        if (!isCorrect) {
+            try {
+                const transRes = await translate(normalizedUserAnswer, { to: 'en' });
+                if (transRes && transRes.text) {
+                    normalizedUserAnswer = transRes.text.toLowerCase().replace(/\s\s+/g, ' ');
+                }
+            } catch (err) {
+                console.error("Answer evaluation translation failed:", err);
+            }
+
+            // Allow for spelling variations (e.g. 70%) or substring hits
+            const similarity = stringSimilarity.compareTwoStrings(normalizedUserAnswer, normalizedCorrectAnswer);
+            isCorrect = similarity >= 0.70 || normalizedUserAnswer.includes(normalizedCorrectAnswer) || normalizedCorrectAnswer.includes(normalizedUserAnswer);
+        }
 
         // 5. Scoring
         if (isCorrect) {

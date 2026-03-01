@@ -14,6 +14,10 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    options: {
+        type: [String],
+        default: []
+    },
     isCompleted: {
         type: Boolean,
         default: false
