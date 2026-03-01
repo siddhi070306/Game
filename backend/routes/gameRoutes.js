@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginPlayer, handleScan, handleSubmit, getLeaderboard, getProfile } from '../controllers/gameController.js';
+import { loginPlayer, handleScan, handleSubmit, getLeaderboard, getProfile, getAllUsers } from '../controllers/gameController.js';
 
 import Question from '../models/Question.js';
 
@@ -15,6 +15,7 @@ router.post('/submit', (req, res) => {
 
 router.get('/leaderboard', getLeaderboard);
 router.get('/user/:username', getProfile);
+router.get('/admin/users', getAllUsers);
 
 // Debug Route
 router.get('/debug/questions', async (req, res) => {

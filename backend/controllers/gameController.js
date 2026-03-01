@@ -220,3 +220,14 @@ export const getProfile = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// @desc    Get all users with their full history for Admin Panel
+// @route   GET /api/admin/users
+export const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find().sort({ score: -1, totalActiveTime: 1 }).select('-pin -__v');
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
