@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginPlayer, handleScan, handleSubmit, getLeaderboard, getProfile, getAllUsers, getHint } from '../controllers/gameController.js';
+import { loginPlayer, handleScan, handleSubmit, getLeaderboard, getProfile, getAllUsers, getHint, sabotagePlayer } from '../controllers/gameController.js';
 
 import Question from '../models/Question.js';
 
@@ -18,6 +18,10 @@ router.post('/hint', getHint);
 router.get('/leaderboard', getLeaderboard);
 router.get('/user/:username', getProfile);
 router.get('/admin/users', getAllUsers);
+
+router.post('/admin/sabotage', (req, res) => {
+    sabotagePlayer(req, res, req.app.get('socketio'));
+});
 
 // Debug Route
 router.get('/debug/questions', async (req, res) => {

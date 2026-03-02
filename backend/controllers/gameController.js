@@ -6,7 +6,7 @@ import stringSimilarity from 'string-similarity';
 // @desc    Login or register a user with PIN
 // @route   POST /api/login
 export const loginPlayer = async (req, res) => {
-    const { username, pin } = req.body;
+    const { username, pin, gameMode } = req.body;
 
     if (!username || !pin) {
         return res.status(400).json({ message: "Username and PIN are required" });
@@ -17,7 +17,7 @@ export const loginPlayer = async (req, res) => {
 
         // Scenario A: User does not exist, create new
         if (!user) {
-            user = await User.create({ username, pin });
+            user = await User.create({ username, pin, gameMode: gameMode || 'Solo' });
             return res.status(200).json({ userId: user._id, username: user.username });
         }
 
@@ -25,9 +25,13 @@ export const loginPlayer = async (req, res) => {
         if (!user.pin) {
             // Legacy user with no PIN - set the PIN for them
             user.pin = pin;
+            user.gameMode = gameMode || 'Solo';
             await user.save();
         } else if (user.pin !== pin) {
             return res.status(401).json({ message: "Username taken or incorrect PIN" });
+        } else {
+            user.gameMode = gameMode || user.gameMode;
+            await user.save();
         }
 
         return res.status(200).json({ userId: user._id, username: user.username });
@@ -117,7 +121,8 @@ export const handleScan = async (req, res) => {
         res.status(200).json({
             questionText: finalQuestionText,
             options: finalOptions,
-            startTime: user.currentQuestionStartTime
+            startTime: user.currentQuestionStartTime,
+            isSabotaged: user.isSabotaged
         });
     } catch (error) {
         console.error("HandleScan Full Error:", error);
@@ -279,6 +284,28 @@ export const getAllUsers = async (req, res) => {
     try {
         const users = await User.find().sort({ score: -1, totalActiveTime: 1 }).select('-pin -__v');
         res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Sabotage a player (toggles sabotage state)
+// @route   POST /api/admin/sabotage
+export const sabotagePlayer = async (req, res, io) => {
+    const { userId } = req.body;
+    try {
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        // Toggle the sabotage state
+        user.isSabotaged = !user.isSabotaged;
+        await user.save();
+
+        if (io) {
+            io.emit('sabotage_status', { userId: user._id, isSabotaged: user.isSabotaged });
+        }
+
+        res.status(200).json({ message: `Player sabotage ${user.isSabotaged ? 'activated' : 'deactivated'}`, isSabotaged: user.isSabotaged });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

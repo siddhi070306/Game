@@ -12,6 +12,7 @@ const EntryPage = () => {
     const t = translations[language];
     const [username, setUsername] = React.useState('');
     const [pin, setPin] = React.useState('');
+    const [gameMode, setGameMode] = React.useState('1v1');
     const [errorMsg, setErrorMsg] = React.useState('');
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -35,7 +36,7 @@ const EntryPage = () => {
             const response = await fetch(`${API_BASE_URL}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: username.trim(), pin: pin.trim() })
+                body: JSON.stringify({ username: username.trim(), pin: pin.trim(), gameMode })
             });
 
             const data = await response.json();
@@ -84,6 +85,22 @@ const EntryPage = () => {
                 <p className="description">
                     {t.description}
                 </p>
+
+                {/* Game Mode Selection */}
+                <div className="game-mode-section">
+                    <label className="input-label" style={{ textAlign: 'center', display: 'block' }}>Select Mode</label>
+                    <div className="mode-selector">
+                        {['1v1', 'Solo', 'Squad'].map(mode => (
+                            <button
+                                key={mode}
+                                className={`mode-btn ${gameMode === mode ? 'active' : ''}`}
+                                onClick={() => setGameMode(mode)}
+                            >
+                                {mode}
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
                 {/* Input Form */}
                 <div className="input-group">

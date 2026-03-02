@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, ChevronRight, Lightbulb } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { io } from 'socket.io-client';
 import API_BASE_URL from '../utils/api';
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../utils/translations';
@@ -11,9 +12,10 @@ const ChallengePage = () => {
     const { language } = useSettings();
     const t = translations[language];
     const location = useLocation();
-    const { question, qrId, startTime, options } = location.state || { question: "No question loaded.", qrId: "", startTime: null, options: [] };
+    const { question, qrId, startTime, options, isSabotaged: initialSabotaged } = location.state || { question: "No question loaded.", qrId: "", startTime: null, options: [], isSabotaged: false };
 
     const [timeLeft, setTimeLeft] = React.useState(null);
+    const [isSabotaged, setIsSabotaged] = React.useState(initialSabotaged || false);
     const [answer, setAnswer] = React.useState('');
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [hint, setHint] = React.useState(null);
@@ -87,14 +89,32 @@ const ChallengePage = () => {
 
     const answerRef = React.useRef(answer);
     const isSubmittingRef = React.useRef(isSubmitting);
+    const isSabotagedRef = React.useRef(isSabotaged);
+
+    React.useEffect(() => {
+        const playerStr = localStorage.getItem('player');
+        if (playerStr) {
+            const player = JSON.parse(playerStr);
+            const socket = io(API_BASE_URL);
+
+            socket.on('sabotage_status', (data) => {
+                if (data.userId === player.userId) {
+                    setIsSabotaged(data.isSabotaged);
+                }
+            });
+
+            return () => socket.disconnect();
+        }
+    }, []);
 
     React.useEffect(() => {
         answerRef.current = answer;
         isSubmittingRef.current = isSubmitting;
-    }, [answer, isSubmitting]);
+        isSabotagedRef.current = isSabotaged;
+    }, [answer, isSubmitting, isSabotaged]);
 
     const handleSubmit = async (isTimeout = false, forcedAnswer = null, isCheat = false) => {
-        if (isSubmittingRef.current) return;
+        if (isSubmittingRef.current || isSabotagedRef.current) return;
         setIsSubmitting(true);
         isSubmittingRef.current = true;
 
@@ -155,6 +175,19 @@ const ChallengePage = () => {
 
     return (
         <div className="challenge-page animate-fade">
+            {isSabotaged && (
+                <div style={{
+                    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                    backgroundColor: 'rgba(239, 68, 68, 0.95)', zIndex: 9999,
+                    display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+                    color: 'white', padding: '20px', textAlign: 'center'
+                }}>
+                    <h1 style={{ fontSize: '3rem', fontWeight: '900', letterSpacing: '4px', marginBottom: '10px', textShadow: '0 0 20px black' }}>SABOTAGED!</h1>
+                    <p style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>An Admin has paused your progress.</p>
+                    <p style={{ marginTop: '10px', opacity: 0.8 }}>Wait until the sabotage ends to continue.</p>
+                </div>
+            )}
+
             {/* Header */}
             <header className="challenge-header">
                 <button className="icon-btn" onClick={() => navigate(-1)}>

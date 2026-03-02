@@ -40,6 +40,15 @@ const userSchema = new mongoose.Schema({
     },
     activeQrId: {
         type: String,
+    },
+    gameMode: {
+        type: String,
+        enum: ['Solo', '1v1', 'Squad'],
+        default: 'Solo'
+    },
+    isSabotaged: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true
