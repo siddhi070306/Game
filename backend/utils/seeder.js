@@ -26,6 +26,7 @@ export const seedQuestions = async () => {
             { qrId: "118", questionText: "Which is the tallest mountain in the world?", correctAnswer: "Mount Everest", options: ["K2", "Mount Everest", "Kangchenjunga", "Makalu"] },
             { qrId: "119", questionText: "In computing, what does CPU stand for?", correctAnswer: "Central Processing Unit", options: ["Computer Personal Unit", "Control Processing Unit", "Central Processing Unit", "Central Program Unit"] },
             { qrId: "120", questionText: "What is the freezing point of water in Celsius?", correctAnswer: "0", options: ["100", "0", "32", "-10"] },
+            { qrId: "121", questionText: "What is the chemical symbol for Gold?", correctAnswer: "Au", options: ["Ag", "Au", "Gd", "Go"] },
 
             // --- ENGLISH GRAMMAR / RIDDLES (400 Series) ---
             { qrId: "400", questionText: "Write a word without a vowel {hint1:it's a word without letters AEIOU, hint2:It’s one of the key elements of music}", correctAnswer: "Rhythm", options: ["Sky", "Rhythm", "Cry", "Fly"] },
@@ -48,6 +49,9 @@ export const seedQuestions = async () => {
             { qrId: "417", questionText: "What has hands but cannot clap?", correctAnswer: "Clock", options: ["Monkey", "Clock", "Robot", "Statue"] },
             { qrId: "418", questionText: "I am an odd number. Take away a letter and I become even. What number am I?", correctAnswer: "Seven", options: ["Nine", "Seven", "Eleven", "Three"] },
             { qrId: "419", questionText: "What has one eye, but can't see?", correctAnswer: "Needle", options: ["Potato", "Needle", "Storm", "Hurricane"] },
+            { qrId: "420", questionText: "Choose the grammatically correct sentence:", correctAnswer: "Each of the students was given a book.", options: ["Each of the students were given a book.", "Each of the students was given a book.", "Each of the student were given a book.", "Each of the students are given a book."] },
+            { qrId: "421", questionText: "What has keys but can't open locks?", correctAnswer: "A piano", options: ["A piano", "A map", "A treasure chest", "A password"] },
+            { qrId: "422", questionText: "I have branches, but no fruit, trunk, or leaves. What am I?", correctAnswer: "A bank", options: ["A bank", "A shadow", "A stick", "A skeleton"] },
 
             // --- GUESS THE MOVIES (600 Series) ---
             { qrId: "600", questionText: "Ek love story jo train journey se start hoti hai aur family opposition face karti hai.", correctAnswer: "Dilwale Dulhania Le Jayenge", options: ["Kuch Kuch Hota Hai", "Dilwale Dulhania Le Jayenge", "Kabhi Khushi Kabhie Gham", "Mohabbatein"] },
@@ -70,6 +74,8 @@ export const seedQuestions = async () => {
             { qrId: "617", questionText: "Ek ameer ladka aur middle class ladki, Prem aur Nisha, ki shaadi mein twist hota hai.", correctAnswer: "Hum Aapke Hain Koun..!", options: ["Maine Pyar Kiya", "Hum Saath-Saath Hain", "Hum Aapke Hain Koun..!", "Vivah"] },
             { qrId: "618", questionText: "Do bhaiyan, Karan aur Arjun, dono ko rebirth milta hai apne past death ka badla lene.", correctAnswer: "Karan Arjun", options: ["Ram Lakhan", "Sholay", "Karan Arjun", "Darr"] },
             { qrId: "619", questionText: "Ek deaf and mute gaon ki ladki Pakistan me kho jati hai aur Bajrangi usse wapas chhodne jata hai.", correctAnswer: "Bajrangi Bhaijaan", options: ["PK", "Sultan", "Bajrangi Bhaijaan", "Tubelight"] },
+            { qrId: "620", questionText: "In Yeh Jawaani Hai Deewani, what is the name of the scenic Himalayan trek the group embarks on?", correctAnswer: "Manali Trek", options: ["Roopkund Trek", "Manali Trek", "Kheerganga Trek", "Hampta Pass Trek"] },
+            { qrId: "621", questionText: "\"Mogambo khush hua\" is the unforgettable dialogue of the villain in which classic film?", correctAnswer: "Mr. India", options: ["Shaan", "Don", "Mr. India", "Ram Lakhan"] },
 
             // --- MATHS (700 Series) (NO OPTIONS) ---
             { qrId: "700", questionText: "Solve: 18 ÷ 3 + 4 × (5 - 2)", correctAnswer: "18" },
@@ -91,7 +97,8 @@ export const seedQuestions = async () => {
             { qrId: "716", questionText: "If a car travels at 60 km/h, how far will it travel in 1.5 hours?", correctAnswer: "90" },
             { qrId: "717", questionText: "What is a polygon with 8 sides called?", correctAnswer: "Octagon" },
             { qrId: "718", questionText: "What is 7 factorial (7!) divided by 6 factorial (6!)?", correctAnswer: "7" },
-            { qrId: "719", questionText: "Solve: 8 - 4 x 2 + 10", correctAnswer: "10" }
+            { qrId: "719", questionText: "Solve: 8 - 4 x 2 + 10", correctAnswer: "10" },
+            { qrId: "720", questionText: "What is the square root of 144 multiplied by 2?", correctAnswer: "24", options: ["12", "24", "36", "14"] }
         ];
 
         const translateDict = {
