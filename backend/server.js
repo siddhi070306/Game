@@ -6,6 +6,7 @@ import { Server } from 'socket.io';
 import connectDB from './config/db.js';
 import gameRoutes from './routes/gameRoutes.js';
 import { seedQuestions } from './utils/seeder.js';
+import { setupVaultSockets } from './controllers/vaultController.js';
 
 dotenv.config();
 
@@ -45,6 +46,9 @@ io.on('connection', (socket) => {
         console.log('User disconnected:', socket.id);
     });
 });
+
+// Setup Vault Socket logic
+setupVaultSockets(io);
 
 const PORT = process.env.PORT || 5000;
 const server = httpServer.listen(PORT, '0.0.0.0', () => {

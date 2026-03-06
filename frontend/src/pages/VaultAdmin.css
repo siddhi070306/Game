@@ -1,0 +1,319 @@
+.vault-admin-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #0f172a;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.vault-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: background-color 0.2s ease;
+    z-index: 0;
+}
+
+.vault-waiting,
+.vault-playing,
+.vault-finished {
+    z-index: 10;
+    text-align: center;
+    width: 90%;
+    max-width: 800px;
+}
+
+.vault-icon {
+    color: #ef4444;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.vault-title {
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    margin-bottom: 5px;
+}
+
+.vault-subtitle {
+    color: #94a3b8;
+    margin-bottom: 40px;
+}
+
+.lobby-code-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.code-label {
+    display: block;
+    color: #cbd5e1;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+}
+
+.code-value {
+    font-size: 4rem;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    color: #fff;
+}
+
+.players-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.player-badge {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.color-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.start-vault-btn {
+    background: #334155;
+    color: #94a3b8;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+}
+
+.start-vault-btn.ready {
+    background: #ef4444;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+.start-vault-btn.ready:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+}
+
+.back-btn {
+    display: block;
+    margin: 20px auto;
+    background: transparent;
+    color: #94a3b8;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
+/* Playing State */
+.vault-core {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin: 40px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+}
+
+.vault-quadrant {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    opacity: 0.3;
+    transition: opacity 0.1s ease;
+}
+
+.vault-quadrant.red {
+    background: #ef4444;
+    top: 0;
+    left: 0;
+}
+
+.vault-quadrant.blue {
+    background: #3b82f6;
+    top: 0;
+    right: 0;
+}
+
+.vault-quadrant.green {
+    background: #22c55e;
+    bottom: 0;
+    left: 0;
+}
+
+.vault-quadrant.yellow {
+    background: #eab308;
+    bottom: 0;
+    right: 0;
+}
+
+.vault-quadrant.flash {
+    opacity: 1;
+    box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.5);
+}
+
+.vault-center-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 150px;
+    background: #0f172a;
+    border-radius: 50%;
+    border: 4px solid #334155;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+.sequence-progress {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.timer-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 2rem;
+    color: #ef4444;
+    font-weight: bold;
+}
+
+.incoming-sequence {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.seq-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+
+/* Finished State */
+.game-over-title {
+    font-size: 2.5rem;
+    color: #22c55e;
+    margin-bottom: 40px;
+}
+
+.stats-board {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 40px;
+}
+
+.stats-header {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 30px;
+}
+
+.blame-name {
+    color: #ef4444;
+    font-size: 2rem;
+    font-weight: 900;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.stat-card h4 {
+    margin: 0 0 15px 0;
+    font-size: 1.2rem;
+}
+
+.mistakes-count {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.mistakes-count .num {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.mistakes-count .label {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.stat-comment {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.finished-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+        text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+}

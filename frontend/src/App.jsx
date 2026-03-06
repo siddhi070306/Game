@@ -9,6 +9,8 @@ import LeaderboardPage from './pages/LeaderboardPage';
 import ProfilePage from './pages/ProfilePage';
 import SplashCursor from './components/SplashCursor';
 import AdminDashboard from './pages/AdminDashboard';
+import VaultAdmin from './pages/VaultAdmin';
+import VaultPlayer from './pages/VaultPlayer';
 import './App.css';
 
 function App() {
@@ -44,6 +46,8 @@ function App() {
             <Route path="/leaderboard" element={<LeaderboardPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/vault" element={<VaultAdmin />} />
+            <Route path="/vault-player" element={<VaultPlayer />} />
           </Routes>
         </div>
       </Router>

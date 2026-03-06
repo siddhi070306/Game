@@ -254,8 +254,7 @@ export const getLeaderboard = async (req, res) => {
     try {
         const leaderboard = await User.find()
             .sort({ score: -1, totalActiveTime: 1 })
-            .limit(20)
-            .select('username score totalActiveTime');
+            .select('username score totalActiveTime gameMode activeQrId answeredQuestions');
 
         res.status(200).json(leaderboard);
     } catch (error) {

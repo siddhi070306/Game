@@ -1,0 +1,147 @@
+.vault-player-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #0f172a;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    padding: 20px;
+    text-align: center;
+}
+
+.vault-join-screen h2 {
+    font-size: 2rem;
+    color: #ef4444;
+    margin-bottom: 10px;
+}
+
+.vault-join-screen .desc {
+    color: #94a3b8;
+    margin-bottom: 30px;
+}
+
+.lobby-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #334155;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.5em;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+.lobby-input:focus {
+    outline: none;
+    border-color: #ef4444;
+}
+
+.error-msg {
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.vault-wait-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-label {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}
+
+.pulse-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    animation: simple-pulse 2s infinite ease-in-out;
+    margin-bottom: 40px;
+}
+
+.wait-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.instruction-text {
+    color: #94a3b8;
+    max-width: 80%;
+}
+
+.vault-play-screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.mistakes-tracker {
+    position: absolute;
+    top: 20px;
+    font-size: 1.2rem;
+    color: #94a3b8;
+    font-weight: bold;
+}
+
+.vault-main-btn {
+    width: 80vw;
+    height: 80vw;
+    max-width: 350px;
+    max-height: 350px;
+    border-radius: 50%;
+    border: 8px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: transform 0.05s ease, filter 0.1s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.vault-main-btn:active,
+.vault-main-btn.clicked {
+    transform: scale(0.95);
+    filter: brightness(1.2);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.vault-finish-screen h2 {
+    color: #22c55e;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+@keyframes simple-pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+}

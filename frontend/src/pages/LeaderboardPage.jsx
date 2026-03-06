@@ -11,7 +11,8 @@ const LeaderboardPage = () => {
     const navigate = useNavigate();
     const { language } = useSettings();
     const t = translations[language];
-    const [players, setPlayers] = React.useState([]);
+    const [allPlayers, setAllPlayers] = React.useState([]);
+    const [activeTab, setActiveTab] = React.useState('Solo');
     const [myUsername, setMyUsername] = React.useState('');
 
     const fetchLeaderboard = async () => {
@@ -19,25 +20,54 @@ const LeaderboardPage = () => {
             const response = await fetch(`${API_BASE_URL}/api/leaderboard`);
             if (response.ok) {
                 const data = await response.json();
-
-                const formatted = data.map((p, index) => {
-                    const score = p.score || 0;
-                    return {
-                        rank: index + 1,
-                        name: p.username || 'Anonymous',
-                        title: score > 50 ? t.grandmaster : score > 20 ? t.pro_rank : t.elite,
-                        points: score.toString(),
-                        isTop: index === 0,
-                        isCurrent: p.username === myUsername
-                    };
-                });
-                // If there were many more, we might filter or show a specific slice
-                setPlayers(formatted);
+                setAllPlayers(data);
             }
         } catch (err) {
             console.error("Leaderboard fetch error:", err);
         }
     };
+
+    const players = React.useMemo(() => {
+        const filtered = allPlayers.filter(p => (p.gameMode || 'Solo') === activeTab);
+
+        const pairCounts = {};
+        if (activeTab === '1v1') {
+            filtered.forEach(p => {
+                const key = p.activeQrId || (p.answeredQuestions && p.answeredQuestions.length > 0 ? p.answeredQuestions.join('-') : null);
+                if (key) {
+                    pairCounts[key] = (pairCounts[key] || 0) + 1;
+                }
+            });
+        }
+
+        const getColorForPair = (key, lightness = '60%') => {
+            let hash = 0;
+            for (let i = 0; i < key.length; i++) {
+                hash = key.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return `hsl(${Math.abs(hash) % 360}, 100%, ${lightness})`;
+        };
+
+        return filtered.map((p, index) => {
+            const score = p.score || 0;
+            const key = p.activeQrId || (p.answeredQuestions && p.answeredQuestions.length > 0 ? p.answeredQuestions.join('-') : null);
+            const isPaired = activeTab === '1v1' && key && pairCounts[key] >= 2;
+            const pairColor = isPaired ? getColorForPair(key) : null;
+            const pairGlow = isPaired ? getColorForPair(key, '20%') : null;
+
+            return {
+                rank: index + 1,
+                name: p.username || 'Anonymous',
+                title: score > 50 ? t.grandmaster : score > 20 ? t.pro_rank : t.elite,
+                points: score.toString(),
+                isTop: index === 0,
+                isCurrent: p.username === myUsername,
+                pairColor,
+                pairGlow
+            };
+        });
+    }, [allPlayers, activeTab, myUsername, t]);
+
 
     React.useEffect(() => {
         const playerStr = localStorage.getItem('player');
@@ -70,7 +100,24 @@ const LeaderboardPage = () => {
                 </button>
             </header>
 
-            <div style={{ paddingBottom: '20px' }}></div>
+            {/* Mode Tabs */}
+            <div className="leaderboard-tabs" style={{ display: 'flex', gap: '8px', padding: '0 20px', marginBottom: '20px', marginTop: '10px' }}>
+                {['1v1', 'Solo', 'Squad'].map(tab => (
+                    <button
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        style={{
+                            flex: 1, padding: '10px', borderRadius: '8px', border: 'none',
+                            background: activeTab === tab ? '#3b82f6' : 'rgba(255,255,255,0.05)',
+                            color: activeTab === tab ? '#fff' : '#94a3b8',
+                            fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.3s',
+                            fontSize: '0.9rem'
+                        }}
+                    >
+                        {tab}
+                    </button>
+                ))}
+            </div>
 
 
             {/* List */}
@@ -80,14 +127,17 @@ const LeaderboardPage = () => {
                         <div
                             key={player.rank}
                             className={`player-card animate-slide-up stagger-${(index % 5) + 1} ${player.isCurrent ? 'current' : ''} ${player.isTop ? 'first' : ''}`}
-                            style={{ opacity: 0 }}
+                            style={{
+                                opacity: 0,
+                                ...(player.pairColor ? { borderLeft: `4px solid ${player.pairColor}`, borderRight: `4px solid ${player.pairColor}`, backgroundColor: player.pairGlow } : {})
+                            }}
                         >
                             <div className="rank-section">
                                 <span className={`rank-num ${player.isTop ? 'gold' : ''}`}>{player.rank}</span>
                             </div>
 
                             <div className="avatar-section">
-                                <div className="avatar-placeholder">
+                                <div className="avatar-placeholder" style={player.pairColor ? { borderColor: player.pairColor, color: player.pairColor } : {}}>
                                     {player.name ? player.name.charAt(0) : '?'}
                                 </div>
                             </div>
@@ -103,6 +153,11 @@ const LeaderboardPage = () => {
                             </div>
                         </div>
                     ))}
+                    {players.length === 0 && (
+                        <div style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+                            No players found in {activeTab} mode.
+                        </div>
+                    )}
                 </div>
             </main>
 

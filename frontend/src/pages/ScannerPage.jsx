@@ -142,6 +142,20 @@ const ScannerPage = () => {
                         </button>
                     </div>
                 </div>
+
+                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                    <button
+                        onClick={() => navigate('/vault-player')}
+                        style={{
+                            backgroundColor: '#3b82f6', color: 'white', border: 'none',
+                            padding: '12px 24px', borderRadius: '8px', fontWeight: 'bold',
+                            fontSize: '1rem', cursor: 'pointer', width: '100%', maxWidth: '300px',
+                            boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)'
+                        }}
+                    >
+                        🎮 Join active Vault
+                    </button>
+                </div>
             </main>
 
             {/* Bottom Nav */}
