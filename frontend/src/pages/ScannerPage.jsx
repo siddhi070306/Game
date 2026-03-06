@@ -12,6 +12,7 @@ const ScannerPage = () => {
     const t = translations[language];
     const [code, setCode] = useState("");
     const [error, setError] = useState(false);
+    const [errorText, setErrorText] = useState("");
 
     // No session check redirect as App handles it
     useEffect(() => {
@@ -55,22 +56,23 @@ const ScannerPage = () => {
             } else {
                 setError(true);
                 const errorMsg = data.message || "Invalid Station Code";
-                const stackTrace = data.stack ? `\n\nDebug Info: ${data.stack.split('\n')[0]}` : "";
-                alert(`${errorMsg}${stackTrace}`);
+                setErrorText(errorMsg);
                 if (navigator.vibrate) navigator.vibrate(200);
                 setTimeout(() => {
                     setError(false);
                     setCode("");
-                }, 1000);
+                    setErrorText("");
+                }, 3000);
             }
         } catch (err) {
             console.error("Scan error:", err);
-            alert(`Connection error: ${err.message}. Is the server running?`);
             setError(true);
+            setErrorText(`Connection error. Is the server running?`);
             setTimeout(() => {
                 setError(false);
                 setCode("");
-            }, 2000);
+                setErrorText("");
+            }, 3000);
         }
     };
 
@@ -113,7 +115,7 @@ const ScannerPage = () => {
                     ))}
                 </div>
 
-                {error && <p className="error-message">{t.invalid_code}</p>}
+                {error && <p className="error-message">{errorText || t.invalid_code}</p>}
 
                 {/* Custom Numpad */}
                 <div className="numpad-container">

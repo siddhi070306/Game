@@ -326,6 +326,9 @@ export const getHint = async (req, res) => {
         // Apply penalty if not already used on this station
         if (!user.hintsUsed) user.hintsUsed = [];
         if (!user.hintsUsed.includes(qrId)) {
+            if (user.score < 5) {
+                return res.status(400).json({ message: "Not enough points for a hint!" });
+            }
             user.score -= 5;
             user.hintsUsed.push(qrId);
             await user.save();

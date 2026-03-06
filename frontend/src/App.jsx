@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { SettingsProvider } from './context/SettingsContext';
 import TopActions from './components/TopActions';
 import EntryPage from './pages/EntryPage';
@@ -48,6 +48,8 @@ function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/vault" element={<VaultAdmin />} />
             <Route path="/vault-player" element={<VaultPlayer />} />
+            <Route path="/lobby" element={<Navigate to="/" replace />} />
+            <Route path="/rankings" element={<Navigate to="/leaderboard" replace />} />
           </Routes>
         </div>
       </Router>

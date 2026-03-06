@@ -167,6 +167,17 @@ export const setupVaultSockets = (io) => {
             io.to(lobbyCode).emit('vault_game_over', { stats, weakestLink });
 
             delete activeVaults[lobbyCode];
+            delete activeVaults[lobbyCode];
         };
+
+        socket.on('disconnect', () => {
+            for (const lobbyCode in activeVaults) {
+                if (activeVaults[lobbyCode].hostSocket === socket.id) {
+                    if (activeVaults[lobbyCode].gameTimer) clearInterval(activeVaults[lobbyCode].gameTimer);
+                    if (activeVaults[lobbyCode].patternTimer) clearInterval(activeVaults[lobbyCode].patternTimer);
+                    delete activeVaults[lobbyCode];
+                }
+            }
+        });
     });
 };
