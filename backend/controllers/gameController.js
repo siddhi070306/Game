@@ -342,12 +342,12 @@ export const getHint = async (req, res) => {
         if (!hintText || hintText.trim() === "") {
             const ans = question.correctAnswer;
             // Generate basic logic hint based on answer
-            if (ans.length > 3 && isNaN(ans)) {
-                hintText = `Starts with '${ans.substring(0, 2)}' and ends with '${ans.slice(-1)}'`;
-            } else if (!isNaN(ans) && ans.length > 1) {
-                hintText = `It is a ${ans.length}-digit number.`;
+            if (isNaN(ans)) {
+                const words = ans.split(' ').filter(w => w.length > 0);
+                const letterCount = ans.replace(/\s/g, '').length;
+                hintText = `The answer consists of ${words.length} word(s) and a total of ${letterCount} letters.`;
             } else {
-                hintText = `The length of the answer is ${ans.length} character(s).`;
+                hintText = `It is a ${ans.toString().replace(/\s/g, '').length}-digit number.`;
             }
         }
 
