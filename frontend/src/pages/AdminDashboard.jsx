@@ -115,21 +115,19 @@ const AdminDashboard = () => {
                             ))}
                         </div>
 
-                        {activeTab === 'Squad' && (
-                            <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-                                <button
-                                    onClick={() => navigate('/vault')}
-                                    style={{
-                                        backgroundColor: '#ef4444', color: 'white', border: 'none',
-                                        padding: '15px 30px', borderRadius: '8px', fontWeight: 'bold',
-                                        fontSize: '1.2rem', cursor: 'pointer', boxShadow: '0 0 15px rgba(239, 68, 68, 0.5)'
-                                    }}
-                                >
-                                    <Zap size={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                                    Launch The Vault Mode
-                                </button>
-                            </div>
-                        )}
+                        <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+                            <button
+                                onClick={() => navigate('/vault')}
+                                style={{
+                                    backgroundColor: '#ef4444', color: 'white', border: 'none',
+                                    padding: '15px 30px', borderRadius: '8px', fontWeight: 'bold',
+                                    fontSize: '1.2rem', cursor: 'pointer', boxShadow: '0 0 15px rgba(239, 68, 68, 0.5)'
+                                }}
+                            >
+                                <Zap size={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                                Launch The Vault Mode (Squad Game)
+                            </button>
+                        </div>
 
                         {activeTab === '1v1' && active1v1Matches.length > 0 && (
                             <div className="live-matches-section">

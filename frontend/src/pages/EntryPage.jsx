@@ -46,7 +46,11 @@ const EntryPage = () => {
                     username: data.username,
                     userId: data.userId
                 }));
-                navigate('/scan');
+                if (data.username.toLowerCase() === 'admin') {
+                    navigate('/admin');
+                } else {
+                    navigate('/scan');
+                }
             } else {
                 setErrorMsg(data.message || 'Username taken or incorrect PIN.');
             }

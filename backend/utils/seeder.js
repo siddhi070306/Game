@@ -6,32 +6,32 @@ export const seedQuestions = async () => {
 
         const scavengerQuestions = [
             // --- GENERAL (100 Series) ---
-            { qrId: "101", questionText: "Who is the Prime Minister of India?", correctAnswer: "Narendra Modi", options: ["Narendra Modi", "Rahul Gandhi", "Amit Shah", "Arvind Kejriwal"] },
+            { qrId: "101", questionText: "Who is the current President of India?", correctAnswer: "Droupadi Murmu", options: ["Narendra Modi", "Rahul Gandhi", "Ram Nath Kovind", "Droupadi Murmu"] },
             { qrId: "102", questionText: "In USF there are core values CIRCA in that what does R stand for?", correctAnswer: "Respect", options: ["Responsibility", "Righteousness", "Respect", "Readiness"] },
-            { qrId: "103", questionText: "What is the capital of France?", correctAnswer: "Paris", options: ["London", "Rome", "Paris", "Berlin"] },
-            { qrId: "104", questionText: "Wait! In networking, what does HTTP stand for?", correctAnswer: "Hypertext Transfer Protocol", options: ["Hyper Transfer Text Protocol", "Hypertext Transfer Protocol", "High Test Transfer Protocol", "Hyperlink Transfer Technology"] },
+            { qrId: "103", questionText: "What is the capital of India?", correctAnswer: "New Delhi", options: ["Mumbai", "Kolkata", "New Delhi", "Chennai"] },
+            { qrId: "104", questionText: "In USF there are core values CIRCA what does A stands for??", correctAnswer: "Accountable", options: ["Accountable", "Acocuntant", "Accountantship", "Audit"] },
             { qrId: "105", questionText: "What is the chemical symbol for sodium?", correctAnswer: "Na", options: ["So", "N", "Na", "Sd"] },
             { qrId: "106", questionText: "What is the longest river in the world?", correctAnswer: "Nile", options: ["Amazon", "Nile", "Mississippi", "Yangtze"] },
             { qrId: "107", questionText: "How many months have 28 days?", correctAnswer: "All 12 Months", options: ["1", "6", "All 12 Months", "2"] },
             { qrId: "108", questionText: "Which planet is known as the Red Planet?", correctAnswer: "Mars", options: ["Venus", "Mars", "Jupiter", "Saturn"] },
-            { qrId: "109", questionText: "Who wrote 'Romeo and Juliet'?", correctAnswer: "William Shakespeare", options: ["Charles Dickens", "Jane Austen", "William Shakespeare", "Mark Twain"] },
+            { qrId: "109", questionText: "Which is the hottest planet in solar system?", correctAnswer: "Venus", options: ["Mercury", "Venus", "Earth", "Mars"] },
             { qrId: "110", questionText: "What gas do plants absorb from the atmosphere?", correctAnswer: "Carbon Dioxide", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"] },
-            { qrId: "111", questionText: "What is the hardest natural substance on Earth?", correctAnswer: "Diamond", options: ["Gold", "Diamond", "Iron", "Platinum"] },
+            { qrId: "111", questionText: "What is the hardest natural substance on Earth?", correctAnswer: "Diamond", options: ["Carbon", "Diamond", "Iron", "Platinum"] },
             { qrId: "112", questionText: "How many continents are there?", correctAnswer: "7", options: ["5", "6", "7", "8"] },
             { qrId: "113", questionText: "What is the largest ocean on Earth?", correctAnswer: "Pacific Ocean", options: ["Atlantic Ocean", "Pacific Ocean", "Indian Ocean", "Arctic Ocean"] },
-            { qrId: "114", questionText: "Who painted the Mona Lisa?", correctAnswer: "Leonardo da Vinci", options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"] },
+            { qrId: "114", questionText: "Who is the founder of udyan care?", correctAnswer: "Kiran Modi", options: ["Kiran Modi Mam", "Bhagyashree Mam", "Mangal Mam", "Komal Mam"] },
             { qrId: "115", questionText: "What is the largest mammal in the world?", correctAnswer: "Blue Whale", options: ["Elephant", "Shark", "Giraffe", "Blue Whale"] },
-            { qrId: "116", questionText: "How many colors are in a rainbow?", correctAnswer: "7", options: ["6", "7", "8", "9"] },
-            { qrId: "117", questionText: "What do bees collect to make honey?", correctAnswer: "Nectar", options: ["Pollen", "Water", "Nectar", "Sap"] },
+            { qrId: "116", questionText: "Women to recieve nobel price twice  ?", correctAnswer: "Marie Curie", options: ["Marie Curie", "Malala Yousafzai", "Mother Teresa", "Kiran Bedi"] },
+            { qrId: "117", questionText: "Who wrote the nation anthem of India?", correctAnswer: "Rabindranath Tagore", options: ["Mahatma Gandhi", "Rabindranath Tagore", "Jawaharlal Nehru", "Sardar Vallabhbhai Patel"] },
             { qrId: "118", questionText: "Which is the tallest mountain in the world?", correctAnswer: "Mount Everest", options: ["K2", "Mount Everest", "Kangchenjunga", "Makalu"] },
-            { qrId: "119", questionText: "In computing, what does CPU stand for?", correctAnswer: "Central Processing Unit", options: ["Computer Personal Unit", "Control Processing Unit", "Central Processing Unit", "Central Program Unit"] },
+            { qrId: "119", questionText: "In computer, what does CPU stand for?", correctAnswer: "Central Processing Unit", options: ["Computer Personal Unit", "Control Processing Unit", "Central Processing Unit", "Central Program Unit"] },
             { qrId: "120", questionText: "What is the freezing point of water in Celsius?", correctAnswer: "0", options: ["100", "0", "32", "-10"] },
             { qrId: "121", questionText: "What is the chemical symbol for Gold?", correctAnswer: "Au", options: ["Ag", "Au", "Gd", "Go"] },
 
             // --- ENGLISH GRAMMAR / RIDDLES (400 Series) ---
-            { qrId: "400", questionText: "Write a word without a vowel {hint1:it's a word without letters AEIOU, hint2:It’s one of the key elements of music}", correctAnswer: "Rhythm", options: ["Sky", "Rhythm", "Cry", "Fly"] },
-            { qrId: "401", questionText: "What has a head and a tail but no body?", correctAnswer: "Coin", options: ["Snake", "Coin", "Rope", "River"] },
-            { qrId: "402", questionText: "A man says, This woman's mother is my mother-in-law. What relation is the woman to the man?", correctAnswer: "Daughter" }, // Family (No options)
+            { qrId: "400", questionText: "Write a word without a vowel { hint:It’s one of the key elements of music}", correctAnswer: "Rhythm", options: ["Melody", "Rhythm", "Chord", "Harmony"] },
+            { qrId: "401", questionText: "What has a head and a tail but no body?", correctAnswer: "Coin", options: ["Snake", "Coin", "Rope", "Node"] },
+            { qrId: "402", questionText: "A man says, This woman's mother is my mother-in-law. What relation is the woman to the man?", correctAnswer: "Wife" }, // Family (No options)
             { qrId: "403", questionText: "If your uncle's brother is not your uncle, who is he?", correctAnswer: "Father" }, // Family (No options)
             { qrId: "404", questionText: "If you are in a race and pass the person in second place, what place are you in?", correctAnswer: "Second Place", options: ["First Place", "Second Place", "Third Place", "Last Place"] },
             { qrId: "405", questionText: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?", correctAnswer: "Echo", options: ["Ghost", "Shadow", "Echo", "Wind"] },
