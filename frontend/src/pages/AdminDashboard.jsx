@@ -57,8 +57,8 @@ const AdminDashboard = () => {
     }, [users, activeTab]);
 
     const handleSabotage = async (userId, username, isCurrentlySabotaged) => {
-        const actionText = isCurrentlySabotaged ? 'unsabotage' : 'sabotage';
-        if (!window.confirm(`Are you sure you want to ${actionText} ${username}?`)) return;
+        if (isCurrentlySabotaged) return;
+        if (!window.confirm(`Are you sure you want to sabotage ${username} for 5 seconds?`)) return;
 
         try {
             const response = await fetch(`${API_BASE_URL}/api/admin/sabotage`, {
@@ -72,7 +72,6 @@ const AdminDashboard = () => {
                 throw new Error(errData.message || 'Failed to sabotage player');
             }
 
-            alert(`${username} was successfully sabotaged!`);
             fetchUsers(); // Refresh the data to reflect changes
         } catch (err) {
             alert('Error: ' + err.message);
@@ -146,11 +145,12 @@ const AdminDashboard = () => {
                                                         </span>
                                                         <button
                                                             className="sabotage-btn"
-                                                            style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', padding: '0.4rem 0.8rem', backgroundColor: user.isSabotaged ? '#10b981' : '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                            style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', padding: '0.4rem 0.8rem', backgroundColor: user.isSabotaged ? '#94a3b8' : '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: user.isSabotaged ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}
                                                             onClick={() => handleSabotage(user._id, user.username, user.isSabotaged)}
-                                                            title={user.isSabotaged ? "Unsabotage this player (resume)" : "Sabotage this player (pause)"}
+                                                            title={user.isSabotaged ? "Currently sabotaged..." : "Sabotage this player (5s timeout)"}
+                                                            disabled={user.isSabotaged}
                                                         >
-                                                            <Zap size={16} /> {user.isSabotaged ? 'Unsabotage' : 'Sabotage'}
+                                                            <Zap size={16} /> {user.isSabotaged ? 'Sabotaged' : 'Sabotage'}
                                                         </button>
                                                     </div>
                                                 ))}

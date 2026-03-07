@@ -94,6 +94,10 @@ const ScannerPage = () => {
         }
     };
 
+    const playerStr = localStorage.getItem('player');
+    const player = playerStr ? JSON.parse(playerStr) : null;
+    const isSquadMode = player && player.gameMode === 'Squad';
+
     return (
         <div className={`scanner-page station-entry animate-fade ${error ? 'error-flash' : ''}`}>
             {/* Header */}
@@ -145,19 +149,21 @@ const ScannerPage = () => {
                     </div>
                 </div>
 
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                    <button
-                        onClick={() => navigate('/vault-player')}
-                        style={{
-                            backgroundColor: '#3b82f6', color: 'white', border: 'none',
-                            padding: '12px 24px', borderRadius: '8px', fontWeight: 'bold',
-                            fontSize: '1rem', cursor: 'pointer', width: '100%', maxWidth: '300px',
-                            boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)'
-                        }}
-                    >
-                        🎮 Join active Vault
-                    </button>
-                </div>
+                {isSquadMode && (
+                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                        <button
+                            onClick={() => navigate('/vault-player')}
+                            style={{
+                                backgroundColor: '#3b82f6', color: 'white', border: 'none',
+                                padding: '12px 24px', borderRadius: '8px', fontWeight: 'bold',
+                                fontSize: '1rem', cursor: 'pointer', width: '100%', maxWidth: '300px',
+                                boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)'
+                            }}
+                        >
+                            🎮 Join active Vault
+                        </button>
+                    </div>
+                )}
             </main>
 
             {/* Bottom Nav */}

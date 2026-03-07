@@ -74,6 +74,9 @@ const LeaderboardPage = () => {
         if (playerStr) {
             const player = JSON.parse(playerStr);
             setMyUsername(player.username);
+            if (player.gameMode) {
+                setActiveTab(player.gameMode);
+            }
         }
 
         fetchLeaderboard();
@@ -94,34 +97,17 @@ const LeaderboardPage = () => {
                 <button className="icon-btn" onClick={() => navigate(-1)}>
                     <ChevronLeft size={24} />
                 </button>
-                <h2 className="header-title">{t.live_standings}</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <h2 className="header-title">{t.live_standings}</h2>
+                    <span style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '-4px' }}>{activeTab} Mode</span>
+                </div>
                 <button className="icon-btn" onClick={fetchLeaderboard}>
                     <RotateCcw size={20} color="#3b82f6" className="refresh-icon" />
                 </button>
             </header>
 
-            {/* Mode Tabs */}
-            <div className="leaderboard-tabs" style={{ display: 'flex', gap: '8px', padding: '0 20px', marginBottom: '20px', marginTop: '10px' }}>
-                {['1v1', 'Solo', 'Squad'].map(tab => (
-                    <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        style={{
-                            flex: 1, padding: '10px', borderRadius: '8px', border: 'none',
-                            background: activeTab === tab ? '#3b82f6' : 'rgba(255,255,255,0.05)',
-                            color: activeTab === tab ? '#fff' : '#94a3b8',
-                            fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.3s',
-                            fontSize: '0.9rem'
-                        }}
-                    >
-                        {tab}
-                    </button>
-                ))}
-            </div>
-
-
             {/* List */}
-            <main className="leaderboard-content">
+            <main className="leaderboard-content" style={{ marginTop: '20px' }}>
                 <div className="player-list">
                     {players.map((player, index) => (
                         <div

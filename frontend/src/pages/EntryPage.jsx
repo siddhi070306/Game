@@ -44,7 +44,8 @@ const EntryPage = () => {
             if (response.ok) {
                 localStorage.setItem('player', JSON.stringify({
                     username: data.username,
-                    userId: data.userId
+                    userId: data.userId,
+                    gameMode: data.gameMode
                 }));
                 if (data.username.toLowerCase() === 'admin') {
                     navigate('/admin');

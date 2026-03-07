@@ -18,7 +18,7 @@ export const loginPlayer = async (req, res) => {
         // Scenario A: User does not exist, create new
         if (!user) {
             user = await User.create({ username, pin, gameMode: gameMode || 'Solo' });
-            return res.status(200).json({ userId: user._id, username: user.username });
+            return res.status(200).json({ userId: user._id, username: user.username, gameMode: user.gameMode });
         }
 
         // Scenario B: User exists, verify PIN
@@ -34,7 +34,7 @@ export const loginPlayer = async (req, res) => {
             await user.save();
         }
 
-        return res.status(200).json({ userId: user._id, username: user.username });
+        return res.status(200).json({ userId: user._id, username: user.username, gameMode: user.gameMode });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -288,7 +288,7 @@ export const getAllUsers = async (req, res) => {
     }
 };
 
-// @desc    Sabotage a player (toggles sabotage state)
+// @desc    Sabotage a player (activates and auto-deactivates after 5 seconds)
 // @route   POST /api/admin/sabotage
 export const sabotagePlayer = async (req, res, io) => {
     const { userId } = req.body;
@@ -296,15 +296,31 @@ export const sabotagePlayer = async (req, res, io) => {
         const user = await User.findById(userId);
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        // Toggle the sabotage state
-        user.isSabotaged = !user.isSabotaged;
+        // Activates the sabotage state strictly to true
+        user.isSabotaged = true;
         await user.save();
 
         if (io) {
-            io.emit('sabotage_status', { userId: user._id, isSabotaged: user.isSabotaged });
+            io.emit('sabotage_status', { userId: user._id, isSabotaged: true });
         }
 
-        res.status(200).json({ message: `Player sabotage ${user.isSabotaged ? 'activated' : 'deactivated'}`, isSabotaged: user.isSabotaged });
+        // Auto-remove sabotage after 5 seconds
+        setTimeout(async () => {
+            try {
+                const updatedUser = await User.findById(userId);
+                if (updatedUser && updatedUser.isSabotaged) {
+                    updatedUser.isSabotaged = false;
+                    await updatedUser.save();
+                    if (io) {
+                        io.emit('sabotage_status', { userId: updatedUser._id, isSabotaged: false });
+                    }
+                }
+            } catch (err) {
+                console.error("Error auto-unsabotaging user:", err);
+            }
+        }, 5000);
+
+        res.status(200).json({ message: `Player sabotaged for 5 seconds`, isSabotaged: true });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
