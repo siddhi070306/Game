@@ -96,7 +96,7 @@ const ScannerPage = () => {
 
     const playerStr = localStorage.getItem('player');
     const player = playerStr ? JSON.parse(playerStr) : null;
-    const isSquadMode = player && player.gameMode === 'Squad';
+    const isSquadMode = player && player.gameMode && player.gameMode.toLowerCase() === 'squad';
 
     return (
         <div className={`scanner-page station-entry animate-fade ${error ? 'error-flash' : ''}`}>
