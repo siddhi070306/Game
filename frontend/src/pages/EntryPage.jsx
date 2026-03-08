@@ -69,7 +69,7 @@ const EntryPage = () => {
             <header className="entry-header">
                 <div className="logo-section">
                     <Timer className="logo-icon" size={24} />
-                    <span className="logo-text">PRESSURE</span>
+                    <span className="logo-text">Quest Arena</span>
                 </div>
             </header>
 
